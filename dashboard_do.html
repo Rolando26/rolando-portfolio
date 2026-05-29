@@ -40,7 +40,7 @@
     .badge.empty { color: var(--text-muted); background: rgba(209, 213, 219, 0.45); }
     .table-wrapper { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; min-width: 900px; }
-    th, td { padding: 14px 16px; text-align: left; vertical-align: middle; border-bottom: 1px solid #e5e7eb; }
+    th, td { padding: 14px 16px; text-align: left; vertical-align: middle; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
     thead th { background: var(--header-bg); color: var(--header-text); font-weight: 600; letter-spacing: 0.01em; white-space: nowrap; }
     tbody tr:hover { background: #f8fafc; }
     td a { color: var(--primary); text-decoration: none; font-weight: 600; }
@@ -68,6 +68,14 @@
       .grid-col-6 { grid-column: span 12; }
       .header { flex-direction: column; align-items: flex-start; }
       .detail-header { flex-direction: column; align-items: stretch; }
+    }
+    @media (max-width: 640px) {
+      .page { padding: 10px; }
+      .panel { padding: 12px; }
+      .header h1 { font-size: 20px; }
+      th, td { padding: 10px 12px; font-size: 0.82rem; }
+      .table-wrapper { -webkit-overflow-scrolling: touch; }
+      .button { padding: 0.65rem 0.85rem; font-size: 0.85rem; }
     }
   </style>
 </head>
@@ -430,6 +438,13 @@
       document.getElementById('detailView').classList.add('hidden');
       document.getElementById('listView').classList.remove('hidden');
     }
+
+    const monthMap = { 'Januari':1,'Februari':2,'Maret':3,'April':4,'Mei':5,'Juni':6,'Juli':7,'Agustus':8,'September':9,'Oktober':10,'November':11,'Desember':12 };
+    function parseIdDate(str) {
+      const [d, m, y] = str.split(' ');
+      return new Date(y, monthMap[m] - 1, d);
+    }
+    doData.sort((a, b) => parseIdDate(a.invoiceDate) - parseIdDate(b.invoiceDate));
 
     buildList();
   </script>
