@@ -5,78 +5,182 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Rekap Delivery Order — 28 Mei 2026</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:system-ui,-apple-system,sans-serif;background:#f4f6f9;color:#1a1a2e;font-size:14px}
-  .page{max-width:1100px;margin:0 auto;padding:28px 20px}
-  h1{font-size:22px;font-weight:600;color:#1a1a2e;margin-bottom:4px}
-  .sub{color:#6b7280;font-size:13px;margin-bottom:24px}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+    color: #1f2937;
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .page { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
 
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
-  .stat{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px 20px}
-  .stat .label{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
-  .stat .val{font-size:26px;font-weight:600}
-  .stat.total .val{color:#1a1a2e}
-  .stat.ok .val{color:#16a34a}
-  .stat.wait .val{color:#d97706}
+  /* Header */
+  .header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; color: #111827; }
+  .header .sub { font-size: 13px; color: #6b7280; margin-top: 4px; }
+  .btn-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 18px; border-radius: 999px;
+    border: 1.5px solid #d1d5db; background: #fff;
+    font-size: 13px; font-weight: 600; color: #374151;
+    cursor: pointer; text-decoration: none;
+    transition: background .15s, transform .15s, border-color .15s;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-back:hover { background: #f3f4f6; border-color: #9ca3af; transform: translateY(-1px); }
 
-  .filter-row{display:flex;gap:10px;margin-bottom:16px}
-  .filter-row button{padding:7px 18px;border-radius:8px;border:1px solid #d1d5db;background:#fff;cursor:pointer;font-size:13px;color:#374151;transition:all .15s}
-  .filter-row button.active{background:#1a1a2e;color:#fff;border-color:#1a1a2e}
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+  .stat-card {
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 16px;
+    padding: 20px 22px; box-shadow: 0 2px 10px rgba(15,23,42,0.05);
+  }
+  .stat-card .s-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.07em; color: #9ca3af; margin-bottom: 10px;
+  }
+  .stat-card .s-val { font-size: 34px; font-weight: 700; line-height: 1; }
+  .stat-card .s-sub { font-size: 12px; color: #9ca3af; margin-top: 8px; }
+  .stat-card.total .s-val { color: #111827; }
+  .stat-card.ok .s-val { color: #16a34a; }
+  .stat-card.wait .s-val { color: #d97706; }
+  .s-bar { height: 5px; border-radius: 999px; background: #f3f4f6; margin-top: 12px; overflow: hidden; }
+  .s-bar-fill { height: 100%; border-radius: 999px; }
+  .stat-card.ok .s-bar-fill { background: #16a34a; }
+  .stat-card.wait .s-bar-fill { background: #d97706; }
 
-  .table-wrap{background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden}
-  table{width:100%;border-collapse:collapse}
-  thead th{background:#1a1a2e;color:#f9fafb;padding:11px 14px;text-align:left;font-size:12px;font-weight:600;letter-spacing:.04em;white-space:nowrap}
-  tbody tr{border-bottom:1px solid #f0f0f0;transition:background .1s}
-  tbody tr:last-child{border-bottom:none}
-  tbody tr:hover{background:#fafafa}
-  td{padding:11px 14px;vertical-align:top;font-size:13px}
-  td.no{color:#9ca3af;text-align:center;width:36px}
-  td.toko{font-weight:600;color:#1a1a2e;min-width:160px}
-  td.barang ul{list-style:none;padding:0}
-  td.barang ul li{display:flex;justify-content:space-between;gap:16px;padding:2px 0;color:#374151}
-  td.barang ul li span.nama{flex:1}
-  td.barang ul li span.qty{color:#1a1a2e;font-weight:600;white-space:nowrap;min-width:52px;text-align:right}
-  td.kirim{white-space:nowrap;color:#374151;min-width:110px}
-  td.resi{font-family:monospace;font-size:12px;color:#4b5563;min-width:130px}
-  td.status{white-space:nowrap}
-  .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:.02em}
-  .badge.ok{background:#dcfce7;color:#15803d}
-  .badge.wait{background:#fef3c7;color:#92400e}
+  /* Filter */
+  .toolbar {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: 8px; margin-bottom: 16px;
+  }
+  .filter-pill {
+    padding: 8px 18px; border-radius: 999px; border: 1.5px solid #e5e7eb;
+    background: #fff; cursor: pointer; font-size: 13px; font-weight: 600;
+    color: #6b7280; transition: all .15s; line-height: 1;
+  }
+  .filter-pill:hover { border-color: #9ca3af; color: #374151; }
+  .filter-pill.active { background: #111827; color: #fff; border-color: #111827; }
+  .filter-pill.f-ok.active { background: #16a34a; border-color: #16a34a; }
+  .filter-pill.f-wait.active { background: #d97706; border-color: #d97706; }
+  .result-info { margin-left: auto; font-size: 12px; color: #9ca3af; font-weight: 500; }
 
-  .section-head{padding:10px 14px;background:#f8fafc;border-bottom:1px solid #e5e7eb;font-size:12px;font-weight:600;letter-spacing:.05em;color:#6b7280;text-transform:uppercase}
+  /* Badge */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 11px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; white-space: nowrap; letter-spacing: 0.02em;
+  }
+  .badge.ok { background: #dcfce7; color: #15803d; }
+  .badge.wait { background: #fef3c7; color: #92400e; }
 
-  .hidden{display:none}
-  @media(max-width:680px){
-    .stats{grid-template-columns:1fr 1fr}
-    td.resi{display:none}
-    thead th:nth-child(5){display:none}
+  /* ─── Desktop table ─── */
+  .table-wrap {
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 16px;
+    overflow: hidden; box-shadow: 0 2px 14px rgba(15,23,42,0.06);
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    background: #111827; color: #f9fafb; padding: 13px 16px;
+    text-align: left; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.07em; text-transform: uppercase; white-space: nowrap;
+  }
+  thead th:first-child { width: 44px; text-align: center; }
+  tbody tr { border-bottom: 1px solid #f3f4f6; transition: background .1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #fafafa; }
+  td { padding: 13px 16px; vertical-align: top; font-size: 13px; color: #374151; }
+  td.no { color: #d1d5db; text-align: center; font-size: 12px; vertical-align: middle; }
+  td.toko { font-weight: 700; color: #111827; min-width: 150px; vertical-align: middle; }
+  td.barang { min-width: 200px; }
+  .item-list { display: flex; flex-direction: column; gap: 4px; }
+  .item-row { display: flex; justify-content: space-between; gap: 12px; }
+  .item-row .iname { color: #374151; flex: 1; }
+  .item-row .iqty { color: #111827; font-weight: 600; white-space: nowrap; font-size: 12px; }
+  td.kirim { white-space: nowrap; vertical-align: middle; color: #6b7280; min-width: 105px; font-size: 12px; }
+  td.resi { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #6b7280; min-width: 130px; vertical-align: middle; }
+  td.status { vertical-align: middle; }
+
+  /* ─── Mobile cards ─── */
+  .card-list { display: none; flex-direction: column; gap: 12px; }
+  .do-card {
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 16px;
+    padding: 16px 18px; box-shadow: 0 2px 10px rgba(15,23,42,0.05);
+  }
+  .card-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .card-top .left { display: flex; align-items: center; gap: 8px; }
+  .card-no { font-size: 11px; font-weight: 700; color: #d1d5db; }
+  .card-toko { font-size: 15px; font-weight: 700; color: #111827; }
+  .card-items { border-top: 1px solid #f3f4f6; padding: 10px 0; display: flex; flex-direction: column; gap: 5px; }
+  .card-items .item-row { font-size: 13px; }
+  .card-meta {
+    border-top: 1px solid #f3f4f6; padding-top: 10px; margin-top: 2px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 6px;
+  }
+  .card-meta .kirim-label { font-size: 12px; color: #6b7280; }
+  .card-meta .resi-val { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #9ca3af; }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 800px) {
+    .table-wrap { display: none; }
+    .card-list { display: flex; }
+  }
+  @media (max-width: 680px) {
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stats .stat-card:first-child { grid-column: span 2; }
+    .stat-card .s-val { font-size: 28px; }
+  }
+  @media (max-width: 480px) {
+    .page { padding: 14px 12px 36px; }
+    .header h1 { font-size: 20px; }
+    .stats { grid-template-columns: 1fr; }
+    .stats .stat-card:first-child { grid-column: span 1; }
+    .result-info { display: none; }
   }
 </style>
 </head>
 <body>
 <div class="page">
-  <h1>Rekap Delivery Order</h1>
-  <p class="sub">Tanggal cetak: 28 Mei 2026 &nbsp;·&nbsp; Total 58 DO</p>
+
+  <div class="header">
+    <div>
+      <h1>Rekap Delivery Order</h1>
+      <p class="sub">Tanggal cetak: 28 Mei 2026 &nbsp;&middot;&nbsp; Total 58 DO</p>
+    </div>
+    <a href="dashboard_do.html" class="btn-back">&#8592; Dashboard</a>
+  </div>
 
   <div class="stats">
-    <div class="stat total">
-      <div class="label">Total DO</div>
-      <div class="val">58</div>
+    <div class="stat-card total">
+      <div class="s-label">Total DO</div>
+      <div class="s-val">58</div>
+      <div class="s-sub">Semua pengiriman bulan ini</div>
     </div>
-    <div class="stat ok">
-      <div class="label">Terkirim</div>
-      <div class="val">21</div>
+    <div class="stat-card ok">
+      <div class="s-label">Sudah Terkirim</div>
+      <div class="s-val">21</div>
+      <div class="s-sub">36% dari total DO</div>
+      <div class="s-bar"><div class="s-bar-fill" style="width:36%"></div></div>
     </div>
-    <div class="stat wait">
-      <div class="label">Belum Terkirim</div>
-      <div class="val">37</div>
+    <div class="stat-card wait">
+      <div class="s-label">Belum Terkirim</div>
+      <div class="s-val">37</div>
+      <div class="s-sub">64% dari total DO</div>
+      <div class="s-bar"><div class="s-bar-fill" style="width:64%"></div></div>
     </div>
   </div>
 
-  <div class="filter-row">
-    <button class="active" onclick="filter('all',this)">Semua (58)</button>
-    <button onclick="filter('ok',this)">Terkirim (21)</button>
-    <button onclick="filter('wait',this)">Belum (37)</button>
+  <div class="toolbar">
+    <button class="filter-pill active"    onclick="setFilter('all',this)">Semua (58)</button>
+    <button class="filter-pill f-ok"      onclick="setFilter('ok',this)">Terkirim (21)</button>
+    <button class="filter-pill f-wait"    onclick="setFilter('wait',this)">Belum Kirim (37)</button>
+    <span class="result-info" id="resultInfo"></span>
   </div>
 
   <div class="table-wrap">
@@ -85,7 +189,7 @@
         <tr>
           <th>#</th>
           <th>Nama Toko</th>
-          <th>Barang</th>
+          <th>Daftar Barang</th>
           <th>Tgl. Kirim</th>
           <th>No. Resi</th>
           <th>Status</th>
@@ -94,8 +198,10 @@
       <tbody id="tbody"></tbody>
     </table>
   </div>
-</div>
 
+  <div class="card-list" id="cardList"></div>
+
+</div>
 <script>
 const data = [
   {status:'ok', toko:'PT. Sinar Utama', kirim:'23 Mei 2026', resi:'JNE1234567890',
@@ -216,44 +322,69 @@ const data = [
    items:[['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20],['Beras Premium 5kg',30]]}
 ];
 
-let currentFilter = 'all';
+function render(filterType) {
+  const filtered = filterType === 'all' ? data : data.filter(d => d.status === filterType);
+  document.getElementById('resultInfo').textContent = 'Menampilkan ' + filtered.length + ' dari ' + data.length + ' DO';
 
-function render(filter) {
   const tbody = document.getElementById('tbody');
+  const cardList = document.getElementById('cardList');
   tbody.innerHTML = '';
-  const filtered = filter === 'all' ? data : data.filter(d => d.status === filter);
+  cardList.innerHTML = '';
 
-  let no = 0;
-  filtered.forEach(d => {
-    no++;
-    const itemsHtml = d.items.map(([nm,qty]) =>
-      `<li><span class="nama">${nm}</span><span class="qty">${qty} pcs</span></li>`
-    ).join('');
-    const badgeHtml = d.status === 'ok'
+  filtered.forEach(function(d, i) {
+    const no = i + 1;
+    const badge = d.status === 'ok'
       ? '<span class="badge ok">Terkirim</span>'
       : '<span class="badge wait">Belum Kirim</span>';
-    const resiHtml = d.status === 'ok' ? d.resi : '—';
-    const kiriHtml = d.status === 'ok' ? d.kirim : '—';
+    const resiText = d.status === 'ok' ? d.resi : '&mdash;';
+    const kirimText = d.status === 'ok' ? d.kirim : '&mdash;';
+    const itemsHtml = d.items.map(function(it) {
+      return '<div class="item-row"><span class="iname">' + it[0] + '</span><span class="iqty">' + it[1] + ' pcs</span></div>';
+    }).join('');
 
+    // Table row
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="no">${no}</td>
-      <td class="toko">${d.toko}</td>
-      <td class="barang"><ul>${itemsHtml}</ul></td>
-      <td class="kirim">${kiriHtml}</td>
-      <td class="resi">${resiHtml}</td>
-      <td class="status">${badgeHtml}</td>
-    `;
+    tr.innerHTML =
+      '<td class="no">' + no + '</td>' +
+      '<td class="toko">' + d.toko + '</td>' +
+      '<td class="barang"><div class="item-list">' + itemsHtml + '</div></td>' +
+      '<td class="kirim">' + kirimText + '</td>' +
+      '<td class="resi">' + resiText + '</td>' +
+      '<td class="status">' + badge + '</td>';
     tbody.appendChild(tr);
+
+    // Mobile card
+    const card = document.createElement('div');
+    card.className = 'do-card';
+    card.innerHTML =
+      '<div class="card-top">' +
+        '<div class="left">' +
+          '<span class="card-no">#' + no + '</span>' +
+          '<span class="card-toko">' + d.toko + '</span>' +
+        '</div>' +
+        badge +
+      '</div>' +
+      '<div class="card-items">' + itemsHtml + '</div>' +
+      '<div class="card-meta">' +
+        '<span class="kirim-label">' + (d.status === 'ok' ? 'Kirim: ' + d.kirim : 'Belum ada jadwal kirim') + '</span>' +
+        '<span class="resi-val">' + (d.status === 'ok' ? d.resi : '') + '</span>' +
+      '</div>';
+    cardList.appendChild(card);
   });
 }
 
-function filter(type, btn) {
-  currentFilter = type;
-  document.querySelectorAll('.filter-row button').forEach(b => b.classList.remove('active'));
+function setFilter(type, btn) {
+  document.querySelectorAll('.filter-pill').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
   render(type);
 }
+
+const monthMap = {Januari:1,Februari:2,Maret:3,April:4,Mei:5,Juni:6,Juli:7,Agustus:8,September:9,Oktober:10,November:11,Desember:12};
+function parseDate(str) {
+  const p = str.split(' ');
+  return new Date(+p[2], monthMap[p[1]] - 1, +p[0]);
+}
+data.sort(function(a, b) { return parseDate(a.kirim) - parseDate(b.kirim); });
 
 render('all');
 </script>

@@ -61,6 +61,16 @@
     .summary span { display: inline-flex; gap: 6px; }
     .summary strong { font-weight: 700; }
     .hidden { display: none; }
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+    .filter-bar input, .filter-bar select {
+      padding: 0.6rem 1rem; border: 1px solid var(--border); border-radius: 999px;
+      font-size: 0.9rem; background: var(--surface); color: var(--text);
+      outline: none; transition: border-color .15s;
+    }
+    .filter-bar input:focus, .filter-bar select:focus { border-color: var(--primary); }
+    .filter-bar input { flex: 1; min-width: 200px; }
+    .filter-bar select { min-width: 160px; }
+    .result-count { font-size: 0.85rem; color: var(--text-muted); align-self: center; margin-left: auto; }
     .detail-title { margin: 0; font-size: 22px; }
     .badge-light { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
     @media (max-width: 980px) {
@@ -86,6 +96,7 @@
         <h1>Delivery Order Dashboard</h1>
         <p>Simulasi sistem Delivery Order untuk keperluan testing internal.</p>
       </div>
+      <a href="rekap_DO.html" style="display:inline-flex;align-items:center;gap:8px;padding:0.75rem 1.25rem;background:#2563eb;color:#fff;border-radius:999px;font-size:0.9rem;font-weight:600;text-decoration:none;border:none;transition:background .15s,transform .15s;" onmouseover="this.style.background='#1d4ed8';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#2563eb';this.style.transform='translateY(0)'">Lihat Rekap DO</a>
     </div>
 
     <section id="listView" class="panel">
@@ -94,6 +105,21 @@
           <p style="margin:0;font-size:0.95rem;color:var(--text-muted);">HALAMAN UTAMA - LIST DO</p>
           <h2 style="margin:6px 0 0;font-size:1.35rem;color:var(--text);">Daftar Delivery Order</h2>
         </div>
+      </div>
+      <div class="filter-bar">
+        <input type="text" id="searchInput" placeholder="Cari No. DO, Nama Kontak, Invoice, Resi…" oninput="applyFilter()" />
+        <select id="statusFilter" onchange="applyFilter()">
+          <option value="">Semua Status</option>
+          <option value="terkirim">Sudah Terkirim</option>
+          <option value="belum">Belum Terkirim</option>
+        </select>
+        <select id="expeditionFilter" onchange="applyFilter()">
+          <option value="">Semua Ekspedisi</option>
+          <option value="JNE">JNE</option>
+          <option value="SiCepat">SiCepat</option>
+          <option value="Wahana">Wahana</option>
+        </select>
+        <span class="result-count" id="resultCount"></span>
       </div>
       <div class="table-wrapper">
         <table>
@@ -364,10 +390,11 @@
       return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value);
     }
 
-    function buildList() {
+    function buildList(filtered) {
+      const data = filtered !== undefined ? filtered : doData;
       const tbody = document.getElementById('doListBody');
       tbody.innerHTML = '';
-      doData.forEach((doItem, index) => {
+      data.forEach((doItem, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${index + 1}</td>
@@ -383,6 +410,26 @@
         `;
         tbody.appendChild(row);
       });
+      const countEl = document.getElementById('resultCount');
+      if (countEl) countEl.textContent = `${data.length} dari ${doData.length} DO`;
+    }
+
+    function applyFilter() {
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const status = document.getElementById('statusFilter').value;
+      const expedition = document.getElementById('expeditionFilter').value;
+
+      const result = doData.filter(d => {
+        const matchSearch = !q || [d.id, d.kodeKontak, d.namaKontak, d.invoice, d.shippingNo, d.resi]
+          .some(v => v.toLowerCase().includes(q));
+        const matchStatus = !status ||
+          (status === 'terkirim' && d.status === 'Sudah Terkirim') ||
+          (status === 'belum' && d.status !== 'Sudah Terkirim');
+        const matchExpedition = !expedition || d.info.expedition === expedition;
+        return matchSearch && matchStatus && matchExpedition;
+      });
+
+      buildList(result);
     }
 
     function showDetail(id) {
@@ -446,7 +493,7 @@
     }
     doData.sort((a, b) => parseIdDate(a.invoiceDate) - parseIdDate(b.invoiceDate));
 
-    buildList();
+    buildList(doData);
   </script>
 </body>
 </html>
