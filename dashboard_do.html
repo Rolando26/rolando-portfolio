@@ -51,12 +51,86 @@
     .button.back:hover { transform: translateY(-1px); background: #f8fafc; }
     .grid { display: grid; gap: 16px; grid-template-columns: repeat(12, 1fr); }
     .grid-col-6 { grid-column: span 6; }
-    .info-card { padding: 20px; border-radius: 16px; background: var(--surface); border: 1px solid #e5e7eb; }
-    .info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-    .info-item { display: flex; flex-direction: column; gap: 4px; }
-    .info-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.04em; }
-    .info-value { font-size: 0.98rem; font-weight: 700; color: var(--text); }
-    .info-value.bold { font-size: 1.15rem; }
+    /* Info card — thin grid */
+    .info-card { padding: 0; border-radius: 16px; background: var(--surface); border: 1px solid #e5e7eb; overflow: hidden; }
+    .info-grid-table { display: grid; grid-template-columns: 1fr 1fr; }
+    .info-cell { padding: 12px 16px; border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; display: flex; flex-direction: column; gap: 4px; }
+    .info-cell:nth-child(2n) { border-right: none; }
+    .info-grid-table .info-cell:nth-last-child(-n+2) { border-bottom: none; }
+    .info-section-head { padding: 8px 16px; background: #f8fafc; border-top: 2px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); }
+    .info-label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; }
+    .info-value { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+
+    /* Drawer overlay */
+    .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 100; backdrop-filter: blur(2px); }
+    /* Drawer panel */
+    .drawer {
+      position: fixed; top: 0; right: 0; bottom: 0;
+      width: min(540px, 100vw);
+      background: var(--surface);
+      box-shadow: -8px 0 40px rgba(15,23,42,0.15);
+      z-index: 101;
+      display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform .25s cubic-bezier(.4,0,.2,1);
+    }
+    .drawer.open { transform: translateX(0); }
+    .drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .drawer-header h3 { margin: 4px 0 0; font-size: 1.1rem; }
+    .drawer-header .sub-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
+    .drawer-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+    .drawer-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0; }
+    .drawer-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); margin-bottom: 14px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-field { display: flex; flex-direction: column; gap: 5px; }
+    .form-field label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+    .form-field input, .form-field select, .form-field textarea { padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.9rem; color: var(--text); background: var(--surface); outline: none; transition: border-color .15s; font-family: inherit; }
+    .form-field input:focus, .form-field select:focus { border-color: var(--primary); }
+    .form-divider { margin: 22px 0 16px; border: none; border-top: 1px solid var(--border); }
+    .items-table-wrap { overflow-x: auto; margin-bottom: 10px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .items-table { width: 100%; border-collapse: collapse; min-width: 540px; font-size: 13px; }
+    .items-table th { background: #f8fafc; color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+    .items-table td { padding: 6px 6px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+    .items-table tbody tr:last-child td { border-bottom: none; }
+    .items-table input { width: 100%; padding: 6px 8px; border: 1px solid #e5e7eb; border-radius: 7px; font-size: 13px; outline: none; font-family: inherit; }
+    .items-table input:focus { border-color: var(--primary); }
+    .btn-remove { background: none; border: none; color: #dc2626; cursor: pointer; font-size: 16px; padding: 2px 6px; border-radius: 6px; line-height: 1; }
+    .btn-remove:hover { background: #fef2f2; }
+    .btn-add-item { width: 100%; padding: 9px; border: 1.5px dashed var(--border); border-radius: 10px; background: none; color: var(--primary); font-size: 13px; font-weight: 600; cursor: pointer; transition: background .15s; margin-top: 10px; }
+    .btn-add-item:hover { background: #eff6ff; border-color: var(--primary); }
+    .form-error { color: #dc2626; font-size: 13px; padding: 10px 0 0; font-weight: 500; }
+    .form-auto-field { padding: 9px 12px; border: 1px solid #e5e7eb; border-radius: 10px; font-size: 0.9rem; color: var(--text-muted); background: #f8fafc; font-family: inherit; display: block; width: 100%; box-sizing: border-box; font-weight: 600; }
+    .form-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); margin: 20px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb; }
+    /* Stage badges */
+    .badge.stage1 { background: rgba(37,99,235,0.12); color: #2563eb; }
+    .badge.stage2 { background: rgba(234,88,12,0.12); color: #ea580c; }
+    .badge.stage3 { background: rgba(22,163,74,0.12); color: #16a34a; }
+    /* Progress steps */
+    .steps-bar { display: flex; align-items: center; margin-bottom: 20px; }
+    .step-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .step-connector { flex: 1; height: 2px; background: #e5e7eb; margin-bottom: 22px; }
+    .step-connector.done { background: #16a34a; }
+    .step-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .step-circle.done { background: #16a34a; color: #fff; }
+    .step-circle.active { background: #2563eb; color: #fff; box-shadow: 0 0 0 5px rgba(37,99,235,0.15); }
+    .step-circle.pending { background: #f3f4f6; color: #9ca3af; border: 2px solid #e5e7eb; }
+    .step-label { font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .step-label.done { color: #16a34a; }
+    .step-label.active { color: #2563eb; }
+    .step-label.pending { color: #9ca3af; }
+    /* Status grid in form */
+    .status-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; margin-top: 10px; }
+    .status-col { padding: 10px 12px; border-right: 1px solid #e5e7eb; text-align: center; }
+    .status-col:last-child { border-right: none; }
+    .status-col-head { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 6px; background: #f8fafc; padding: 8px 0; border-bottom: 1px solid #e5e7eb; }
+    .status-col-val { font-size: 12px; font-weight: 600; padding: 10px 0; }
+    .status-col-val.s-active { color: #2563eb; }
+    .status-col-val.s-pending { color: #9ca3af; }
+    .status-col-val.s-done { color: #16a34a; }
+    .btn-advance { display: inline-flex; align-items: center; gap: 6px; padding: 0.55rem 1.1rem; border-radius: 999px; border: none; cursor: pointer; font-weight: 600; font-size: 0.85rem; background: #2563eb; color: #fff; transition: background .15s, transform .15s; }
+    .btn-advance:hover { background: #1d4ed8; transform: translateY(-1px); }
+    .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
     .summary { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; padding: 16px 0; color: var(--text); }
     .summary span { display: inline-flex; gap: 6px; }
     .summary strong { font-weight: 700; }
@@ -105,13 +179,15 @@
           <p style="margin:0;font-size:0.95rem;color:var(--text-muted);">HALAMAN UTAMA - LIST DO</p>
           <h2 style="margin:6px 0 0;font-size:1.35rem;color:var(--text);">Daftar Delivery Order</h2>
         </div>
+        <button class="button btn-primary" onclick="openDrawer()">+ Tambah DO</button>
       </div>
       <div class="filter-bar">
         <input type="text" id="searchInput" placeholder="Cari No. DO, Nama Kontak, Invoice, Resi…" oninput="applyFilter()" />
         <select id="statusFilter" onchange="applyFilter()">
           <option value="">Semua Status</option>
-          <option value="terkirim">Sudah Terkirim</option>
-          <option value="belum">Belum Terkirim</option>
+          <option value="1">DO Dibuat</option>
+          <option value="2">Surat Jalan</option>
+          <option value="3">Terkirim</option>
         </select>
         <select id="expeditionFilter" onchange="applyFilter()">
           <option value="">Semua Ekspedisi</option>
@@ -148,44 +224,79 @@
         <div style="margin-left:auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
           <span class="badge badge-light">Detail DO</span>
           <h2 class="detail-title" id="detailTitle">No. DO 00123</h2>
+          <div id="detailAdvanceBtn"></div>
         </div>
       </div>
+
+      <div id="detailSteps" style="margin-bottom:4px;"></div>
 
       <div class="grid" style="margin-bottom:24px;">
         <div class="grid-col-6">
           <div class="info-card">
-            <div class="info-grid">
-              <div class="info-item">
+            <!-- Info dasar DO -->
+            <div class="info-grid-table">
+              <div class="info-cell">
                 <span class="info-label">No. DO</span>
                 <span class="info-value" id="detailDoNumber"></span>
               </div>
-              <div class="info-item">
+              <div class="info-cell">
                 <span class="info-label">Tanggal</span>
                 <span class="info-value" id="detailDate"></span>
               </div>
-              <div class="info-item">
+              <div class="info-cell">
                 <span class="info-label">Kontak</span>
                 <span class="info-value" id="detailContact"></span>
               </div>
-              <div class="info-item">
+              <div class="info-cell">
                 <span class="info-label">TOP</span>
                 <span class="info-value" id="detailTop"></span>
               </div>
-              <div class="info-item">
+              <div class="info-cell">
                 <span class="info-label">DC</span>
                 <span class="info-value" id="detailDc"></span>
               </div>
-              <div class="info-item">
+              <div class="info-cell">
                 <span class="info-label">Ekspedisi</span>
                 <span class="info-value" id="detailExpedition"></span>
               </div>
-              <div class="info-item">
+              <div class="info-cell">
                 <span class="info-label">Drop Point</span>
                 <span class="info-value" id="detailDropPoint"></span>
               </div>
-              <div class="info-item">
+              <div class="info-cell">
                 <span class="info-label">Remark</span>
                 <span class="info-value" id="detailRemark"></span>
+              </div>
+            </div>
+
+            <!-- Info pengiriman — hanya tampil saat Sudah Terkirim -->
+            <div id="shippingSection" class="hidden">
+              <div class="info-section-head">Informasi Pengiriman</div>
+              <div class="info-grid-table">
+                <div class="info-cell">
+                  <span class="info-label">No. Invoice</span>
+                  <span class="info-value" id="detailInvoice"></span>
+                </div>
+                <div class="info-cell">
+                  <span class="info-label">Tgl. Invoice</span>
+                  <span class="info-value" id="detailInvoiceDate"></span>
+                </div>
+                <div class="info-cell">
+                  <span class="info-label">No. Shipping</span>
+                  <span class="info-value" id="detailShippingNo"></span>
+                </div>
+                <div class="info-cell">
+                  <span class="info-label">Tgl. Shipping</span>
+                  <span class="info-value" id="detailShippingDate"></span>
+                </div>
+                <div class="info-cell">
+                  <span class="info-label">No. Resi</span>
+                  <span class="info-value" id="detailResi"></span>
+                </div>
+                <div class="info-cell">
+                  <span class="info-label">Status</span>
+                  <span><span class="badge success">Sudah Terkirim</span></span>
+                </div>
               </div>
             </div>
           </div>
@@ -219,10 +330,161 @@
     </section>
   </div>
 
+  <!-- Drawer overlay -->
+  <div id="drawerOverlay" class="drawer-overlay hidden" onclick="closeDrawer()"></div>
+
+  <!-- Drawer: Tambah DO -->
+  <div id="drawer" class="drawer">
+    <div class="drawer-header">
+      <div>
+        <span class="sub-label">Form Input</span>
+        <h3>Tambah Delivery Order</h3>
+      </div>
+      <button class="button back" onclick="closeDrawer()" style="padding:0.5rem 0.8rem;">&#10005;</button>
+    </div>
+
+    <div class="drawer-body">
+
+      <!-- Bagian: Info DO -->
+      <div class="form-section-label">Informasi DO</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>No. DO</label>
+          <div class="form-auto-field" id="fDoNumber">—</div>
+        </div>
+        <div class="form-field">
+          <label>Tanggal</label>
+          <div class="form-auto-field" id="fDateDisplay">—</div>
+        </div>
+        <div class="form-field">
+          <label>Jenis</label>
+          <select id="fJenis">
+            <option value="Regular">Regular</option>
+            <option value="Promo">Promo</option>
+            <option value="Express">Express</option>
+            <option value="Sample">Sample</option>
+            <option value="Retur">Retur</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Status Submit</label>
+          <div class="form-auto-field">Belum</div>
+        </div>
+      </div>
+
+      <!-- Bagian: Data Kontak -->
+      <div class="form-section-label">Data Kontak</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Kode Kontak <span style="color:#dc2626">*</span></label>
+          <input type="text" id="fKode" placeholder="KTC-XXXX" />
+        </div>
+        <div class="form-field">
+          <label>Nama Kontak <span style="color:#dc2626">*</span></label>
+          <input type="text" id="fNama" placeholder="Nama perusahaan" />
+        </div>
+        <div class="form-field">
+          <label>TOP</label>
+          <select id="fTop">
+            <option value="COD">COD</option>
+            <option value="30 Hari">30 Hari</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>DC</label>
+          <select id="fDc">
+            <option>Jakarta Barat</option>
+            <option>Jakarta Selatan</option>
+            <option>Jakarta Timur</option>
+            <option>Jakarta Utara</option>
+            <option>Jakarta Pusat</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Bagian: Info Pengiriman -->
+      <div class="form-section-label">Info Pengiriman</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Ekspedisi</label>
+          <select id="fExp">
+            <option>JNE</option>
+            <option>SiCepat</option>
+            <option>Wahana</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Drop Point</label>
+          <select id="fDrop">
+            <option>Gudang Cengkareng</option>
+            <option>Depo Pasar Minggu</option>
+            <option>Gudang Ancol</option>
+            <option>Depo Bintaro</option>
+            <option>Gudang Pulogadung</option>
+            <option>Gudang Harmoni</option>
+            <option>Gudang Kebon Jeruk</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Remark</label>
+          <input type="text" id="fRemark" placeholder="-" />
+        </div>
+        <div class="form-field">
+          <label>Remark Khusus</label>
+          <input type="text" id="fRemarkKhusus" placeholder="-" />
+        </div>
+      </div>
+
+      <!-- Bagian: Daftar Item -->
+      <div class="form-section-label">Daftar Item</div>
+      <div class="items-table-wrap">
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th style="width:28px;">No</th>
+              <th>Item Code</th>
+              <th>Item Name</th>
+              <th>Qty</th>
+              <th>Price (Rp)</th>
+              <th>Disc%</th>
+              <th>Disc Promo</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="formItemsBody"></tbody>
+        </table>
+      </div>
+      <button type="button" class="btn-add-item" onclick="addItemRow()">+ Tambah Item</button>
+      <div id="formError" class="form-error hidden"></div>
+
+      <!-- Bagian: Status -->
+      <div class="form-section-label" style="margin-top:24px;">Status</div>
+      <div class="status-grid">
+        <div class="status-col">
+          <div class="status-col-head">Delivery Order</div>
+          <div class="status-col-val s-active">● Sedang Dibuat</div>
+        </div>
+        <div class="status-col">
+          <div class="status-col-head">Surat Jalan</div>
+          <div class="status-col-val s-pending">○ Menunggu</div>
+        </div>
+        <div class="status-col">
+          <div class="status-col-head">Shipping</div>
+          <div class="status-col-val s-pending">○ Menunggu</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="drawer-footer">
+      <button class="button back" onclick="closeDrawer()">Batal</button>
+      <button class="button btn-primary" onclick="submitDO()">Simpan DO</button>
+    </div>
+  </div>
+
   <script>
     const doData = [
       {
-        id: 'DO-2026-001', status: 'Sudah Terkirim', kodeKontak: 'KTC-0301', namaKontak: 'PT. Sinar Utama',
+        id: 'DO-2026-001', stage: 3, kodeKontak: 'KTC-0301', namaKontak: 'PT. Sinar Utama',
         invoice: 'INV-2301-001', invoiceDate: '22 Mei 2026', shippingNo: 'SHP-76222', shippingDate: '23 Mei 2026', resi: 'JNE1234567890',
         info: { date: '22 Mei 2026', contact: 'PT. Sinar Utama', top: 'COD', dc: 'Jakarta Barat', expedition: 'JNE', dropPoint: 'Gudang Cengkareng', remark: 'Ambil Sendiri' },
         items: [
@@ -232,7 +494,7 @@
         ]
       },
       {
-        id: 'DO-2026-002', status: '', kodeKontak: 'KTC-0219', namaKontak: 'PT. Mawar Jaya',
+        id: 'DO-2026-002', stage: 2, kodeKontak: 'KTC-0219', namaKontak: 'PT. Mawar Jaya',
         invoice: 'INV-2301-015', invoiceDate: '20 Mei 2026', shippingNo: 'SHP-76225', shippingDate: '21 Mei 2026', resi: 'SCP0987654321',
         info: { date: '20 Mei 2026', contact: 'PT. Mawar Jaya', top: '30 Hari', dc: 'Jakarta Selatan', expedition: 'SiCepat', dropPoint: 'Depo Pasar Minggu', remark: '-' },
         items: [
@@ -242,7 +504,7 @@
         ]
       },
       {
-        id: 'DO-2026-003', status: 'Sudah Terkirim', kodeKontak: 'KTC-0484', namaKontak: 'CV. Mitra Fresh',
+        id: 'DO-2026-003', stage: 3, kodeKontak: 'KTC-0484', namaKontak: 'CV. Mitra Fresh',
         invoice: 'INV-2301-032', invoiceDate: '18 Mei 2026', shippingNo: 'SHP-76247', shippingDate: '19 Mei 2026', resi: 'WNH3216549870',
         info: { date: '18 Mei 2026', contact: 'CV. Mitra Fresh', top: 'COD', dc: 'Jakarta Timur', expedition: 'Wahana', dropPoint: 'Drop Point Cikarang', remark: 'Ambil Sendiri' },
         items: [
@@ -251,7 +513,7 @@
         ]
       },
       {
-        id: 'DO-2026-004', status: '', kodeKontak: 'KTC-0194', namaKontak: 'PT. Prima Kencana',
+        id: 'DO-2026-004', stage: 1, kodeKontak: 'KTC-0194', namaKontak: 'PT. Prima Kencana',
         invoice: 'INV-2301-049', invoiceDate: '25 Mei 2026', shippingNo: 'SHP-76259', shippingDate: '26 Mei 2026', resi: 'JNE9283746501',
         info: { date: '25 Mei 2026', contact: 'PT. Prima Kencana', top: '30 Hari', dc: 'Jakarta Utara', expedition: 'JNE', dropPoint: 'Gudang Ancol', remark: '-' },
         items: [
@@ -261,7 +523,7 @@
         ]
       },
       {
-        id: 'DO-2026-005', status: 'Sudah Terkirim', kodeKontak: 'KTC-0341', namaKontak: 'PT. Cahaya Logistik',
+        id: 'DO-2026-005', stage: 3, kodeKontak: 'KTC-0341', namaKontak: 'PT. Cahaya Logistik',
         invoice: 'INV-2301-058', invoiceDate: '23 Mei 2026', shippingNo: 'SHP-76263', shippingDate: '24 Mei 2026', resi: 'SCP5647382910',
         info: { date: '23 Mei 2026', contact: 'PT. Cahaya Logistik', top: 'COD', dc: 'Jakarta Barat', expedition: 'SiCepat', dropPoint: 'Gudang Kebon Jeruk', remark: '-' },
         items: [
@@ -271,7 +533,7 @@
         ]
       },
       {
-        id: 'DO-2026-006', status: '', kodeKontak: 'KTC-0058', namaKontak: 'UD. Karya Maju',
+        id: 'DO-2026-006', stage: 2, kodeKontak: 'KTC-0058', namaKontak: 'UD. Karya Maju',
         invoice: 'INV-2301-064', invoiceDate: '24 Mei 2026', shippingNo: 'SHP-76268', shippingDate: '25 Mei 2026', resi: 'WNH2917364508',
         info: { date: '24 Mei 2026', contact: 'UD. Karya Maju', top: '30 Hari', dc: 'Jakarta Selatan', expedition: 'Wahana', dropPoint: 'Depo Bintaro', remark: '-' },
         items: [
@@ -281,7 +543,7 @@
         ]
       },
       {
-        id: 'DO-2026-007', status: 'Sudah Terkirim', kodeKontak: 'KTC-0122', namaKontak: 'PT. Dua Saudara',
+        id: 'DO-2026-007', stage: 3, kodeKontak: 'KTC-0122', namaKontak: 'PT. Dua Saudara',
         invoice: 'INV-2301-077', invoiceDate: '19 Mei 2026', shippingNo: 'SHP-76273', shippingDate: '20 Mei 2026', resi: 'JNE1122334455',
         info: { date: '19 Mei 2026', contact: 'PT. Dua Saudara', top: 'COD', dc: 'Jakarta Pusat', expedition: 'JNE', dropPoint: 'Gudang Harmoni', remark: '-' },
         items: [
@@ -290,7 +552,7 @@
         ]
       },
       {
-        id: 'DO-2026-008', status: '', kodeKontak: 'KTC-0275', namaKontak: 'PT. Indo Sukses',
+        id: 'DO-2026-008', stage: 1, kodeKontak: 'KTC-0275', namaKontak: 'PT. Indo Sukses',
         invoice: 'INV-2301-082', invoiceDate: '26 Mei 2026', shippingNo: 'SHP-76279', shippingDate: '27 Mei 2026', resi: 'SCP6677889900',
         info: { date: '26 Mei 2026', contact: 'PT. Indo Sukses', top: '30 Hari', dc: 'Jakarta Timur', expedition: 'SiCepat', dropPoint: 'Gudang Pulogadung', remark: '-' },
         items: [
@@ -335,12 +597,13 @@
 
     for (let index = 9; index <= 58; index += 1) {
       const contact = extraContacts[(index - 9) % extraContacts.length];
-      const status = index % 3 === 0 ? 'Sudah Terkirim' : '';
+      const stage = index % 3 === 0 ? 3 : index % 3 === 1 ? 1 : 2;
       const expedition = expeditionList[index % expeditionList.length];
       const dc = dcList[index % dcList.length];
       const top = topList[index % topList.length];
-      const shippingDate = `${(index % 28) + 1} Mei 2026`;
-      const invoiceDate = `${((index + 1) % 28) + 1} Mei 2026`;
+      const invoiceDay = (index % 27) + 1;
+      const invoiceDate = `${invoiceDay} Mei 2026`;
+      const shippingDate = `${invoiceDay + 1} Mei 2026`;
       const invoiceNo = `INV-2301-${String(80 + index).padStart(3, '0')}`;
       const shippingNo = `SHP-76${String(280 + index).padStart(3, '0')}`;
       const resi = `${expedition === 'JNE' ? 'JNE' : expedition === 'SiCepat' ? 'SCP' : 'WNH'}${String(1000000000 + index).slice(1)}`;
@@ -365,7 +628,7 @@
 
       doData.push({
         id: `DO-2026-${String(index).padStart(3, '0')}`,
-        status,
+        stage,
         kodeKontak: contact.kode,
         namaKontak: contact.nama,
         invoice: invoiceNo,
@@ -394,19 +657,26 @@
       const data = filtered !== undefined ? filtered : doData;
       const tbody = document.getElementById('doListBody');
       tbody.innerHTML = '';
+      const stageInfo = {
+        1: { label: 'DO Dibuat',   cls: 'stage1' },
+        2: { label: 'Surat Jalan', cls: 'stage2' },
+        3: { label: 'Terkirim',    cls: 'stage3' }
+      };
       data.forEach((doItem, index) => {
+        const shipped = doItem.stage === 3;
+        const si = stageInfo[doItem.stage] || stageInfo[1];
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${index + 1}</td>
-          <td>${doItem.status ? `<span class="badge success">${doItem.status}</span>` : `<span class="badge empty">&ndash;</span>`}</td>
-          <td><a href="#" onclick="showDetail('${doItem.id}')">${doItem.id}</a></td>
+          <td><span class="badge ${si.cls}">${si.label}</span></td>
+          <td><a href="javascript:void(0)" onclick="showDetail('${doItem.id}')">${doItem.id}</a></td>
           <td>${doItem.kodeKontak}</td>
           <td>${doItem.namaKontak}</td>
           <td>${doItem.invoice}</td>
           <td>${doItem.invoiceDate}</td>
-          <td>${doItem.shippingNo}</td>
-          <td>${doItem.shippingDate}</td>
-          <td>${doItem.resi}</td>
+          <td>${shipped ? doItem.shippingNo : '&mdash;'}</td>
+          <td>${shipped ? doItem.shippingDate : '&mdash;'}</td>
+          <td>${shipped ? doItem.resi : '&mdash;'}</td>
         `;
         tbody.appendChild(row);
       });
@@ -421,10 +691,8 @@
 
       const result = doData.filter(d => {
         const matchSearch = !q || [d.id, d.kodeKontak, d.namaKontak, d.invoice, d.shippingNo, d.resi]
-          .some(v => v.toLowerCase().includes(q));
-        const matchStatus = !status ||
-          (status === 'terkirim' && d.status === 'Sudah Terkirim') ||
-          (status === 'belum' && d.status !== 'Sudah Terkirim');
+          .some(v => v && v.toLowerCase().includes(q));
+        const matchStatus = !status || d.stage === parseInt(status);
         const matchExpedition = !expedition || d.info.expedition === expedition;
         return matchSearch && matchStatus && matchExpedition;
       });
@@ -432,18 +700,61 @@
       buildList(result);
     }
 
+    function renderSteps(stage) {
+      const steps = ['DO Dibuat', 'Surat Jalan', 'Terkirim'];
+      let html = '<div class="steps-bar">';
+      steps.forEach((label, i) => {
+        const n = i + 1;
+        const cls = n < stage ? 'done' : n === stage ? 'active' : 'pending';
+        const icon = n < stage ? '&#10003;' : n;
+        html += `<div class="step-item"><div class="step-circle ${cls}">${icon}</div><div class="step-label ${cls}">${label}</div></div>`;
+        if (n < 3) html += `<div class="step-connector${n < stage ? ' done' : ''}"></div>`;
+      });
+      html += '</div>';
+      return html;
+    }
+
+    function advanceStage(id) {
+      const item = doData.find(d => d.id === id);
+      if (!item || item.stage >= 3) return;
+      item.stage += 1;
+      showDetail(id);
+    }
+
     function showDetail(id) {
       const selected = doData.find(item => item.id === id);
       if (!selected) return;
-      document.getElementById('detailTitle').textContent = `${selected.id}`;
+      const stage = selected.stage;
+      const isShipped = stage === 3;
+
+      document.getElementById('detailSteps').innerHTML = renderSteps(stage);
+
+      const advanceLabels = { 1: '→ Buat Surat Jalan', 2: '→ Tandai Terkirim' };
+      document.getElementById('detailAdvanceBtn').innerHTML = stage < 3
+        ? `<button class="btn-advance" onclick="advanceStage('${selected.id}')">${advanceLabels[stage]}</button>`
+        : '';
+
+      document.getElementById('detailTitle').textContent = selected.id;
       document.getElementById('detailDoNumber').textContent = selected.id;
       document.getElementById('detailDate').textContent = selected.info.date;
-      document.getElementById('detailContact').textContent = selected.info.contact;
+      document.getElementById('detailContact').textContent = selected.kodeKontak + ' — ' + selected.namaKontak;
       document.getElementById('detailTop').textContent = selected.info.top;
       document.getElementById('detailDc').textContent = selected.info.dc;
       document.getElementById('detailExpedition').textContent = selected.info.expedition;
       document.getElementById('detailDropPoint').textContent = selected.info.dropPoint;
       document.getElementById('detailRemark').textContent = selected.info.remark;
+
+      const shippingSection = document.getElementById('shippingSection');
+      if (isShipped) {
+        shippingSection.classList.remove('hidden');
+        document.getElementById('detailInvoice').textContent = selected.invoice;
+        document.getElementById('detailInvoiceDate').textContent = selected.invoiceDate;
+        document.getElementById('detailShippingNo').textContent = selected.shippingNo;
+        document.getElementById('detailShippingDate').textContent = selected.shippingDate;
+        document.getElementById('detailResi').textContent = selected.resi;
+      } else {
+        shippingSection.classList.add('hidden');
+      }
 
       const body = document.getElementById('detailItemsBody');
       body.innerHTML = '';
@@ -484,6 +795,121 @@
     function showList() {
       document.getElementById('detailView').classList.add('hidden');
       document.getElementById('listView').classList.remove('hidden');
+      applyFilter();
+    }
+
+    function openDrawer() {
+      const today = new Date();
+      const nextNum = doData.length + 1;
+      document.getElementById('fDoNumber').textContent = `DO-2026-${String(nextNum).padStart(3, '0')}`;
+      document.getElementById('fDateDisplay').textContent = `${today.getDate()} ${idMonths[today.getMonth()]} ${today.getFullYear()}`;
+      document.getElementById('fKode').value = '';
+      document.getElementById('fNama').value = '';
+      document.getElementById('fJenis').value = 'Regular';
+      document.getElementById('fTop').value = 'COD';
+      document.getElementById('fRemark').value = '';
+      document.getElementById('fRemarkKhusus').value = '';
+      document.getElementById('formItemsBody').innerHTML = '';
+      document.getElementById('formError').classList.add('hidden');
+      addItemRow();
+      document.getElementById('drawerOverlay').classList.remove('hidden');
+      requestAnimationFrame(() => document.getElementById('drawer').classList.add('open'));
+    }
+
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+      setTimeout(() => document.getElementById('drawerOverlay').classList.add('hidden'), 250);
+    }
+
+    function addItemRow() {
+      const tbody = document.getElementById('formItemsBody');
+      const rowNum = tbody.rows.length + 1;
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        `<td style="text-align:center;color:var(--text-muted);font-size:12px;">${rowNum}</td>` +
+        '<td><input type="text" placeholder="CG-XXXX" style="width:86px"/></td>' +
+        '<td><input type="text" placeholder="Nama item" style="min-width:120px"/></td>' +
+        '<td><input type="number" placeholder="0" min="1" style="width:56px"/></td>' +
+        '<td><input type="number" placeholder="0" min="0" style="width:86px"/></td>' +
+        '<td><input type="number" placeholder="0" min="0" max="100" style="width:50px"/></td>' +
+        '<td><input type="text" placeholder="-" style="width:86px"/></td>' +
+        '<td><button type="button" class="btn-remove" onclick="this.closest(\'tr\').remove();renumberRows()">&#10005;</button></td>';
+      tbody.appendChild(tr);
+    }
+
+    function renumberRows() {
+      document.querySelectorAll('#formItemsBody tr').forEach((tr, i) => {
+        tr.cells[0].textContent = i + 1;
+      });
+    }
+
+    const idMonths = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    function toIdDate(iso) {
+      const [y, m, d] = iso.split('-');
+      return `${parseInt(d)} ${idMonths[parseInt(m) - 1]} ${y}`;
+    }
+
+    function submitDO() {
+      const kode       = document.getElementById('fKode').value.trim();
+      const nama       = document.getElementById('fNama').value.trim();
+      const jenis      = document.getElementById('fJenis').value;
+      const top        = document.getElementById('fTop').value;
+      const dc         = document.getElementById('fDc').value;
+      const exp        = document.getElementById('fExp').value;
+      const drop       = document.getElementById('fDrop').value;
+      const rmk        = document.getElementById('fRemark').value.trim() || '-';
+      const rmkKhusus  = document.getElementById('fRemarkKhusus').value.trim() || '-';
+      const dateId     = document.getElementById('fDateDisplay').textContent;
+      const errEl      = document.getElementById('formError');
+      errEl.classList.add('hidden');
+
+      if (!kode || !nama) {
+        errEl.textContent = 'Kode Kontak dan Nama Kontak wajib diisi.';
+        errEl.classList.remove('hidden'); return;
+      }
+
+      const rows = document.querySelectorAll('#formItemsBody tr');
+      const items = [];
+      rows.forEach(row => {
+        const inp = row.querySelectorAll('input');
+        if (inp.length < 6) return;
+        const name = inp[1].value.trim();
+        const qty  = parseInt(inp[2].value) || 0;
+        if (!name || qty < 1) return;
+        items.push({
+          code: inp[0].value.trim() || '-',
+          name,
+          qty,
+          price: parseInt(inp[3].value) || 0,
+          discPct: parseInt(inp[4].value) || 0,
+          discPromo: inp[5].value.trim() || '-',
+          remark: '-'
+        });
+      });
+
+      if (items.length === 0) {
+        errEl.textContent = 'Minimal 1 item dengan nama dan qty yang valid.';
+        errEl.classList.remove('hidden'); return;
+      }
+
+      const nextNum = doData.length + 1;
+      const newId   = `DO-2026-${String(nextNum).padStart(3, '0')}`;
+
+      doData.push({
+        id: newId, stage: 1,
+        kodeKontak: kode, namaKontak: nama,
+        invoice: '', invoiceDate: dateId,
+        shippingNo: '', shippingDate: '', resi: '',
+        info: { date: dateId, contact: nama, jenis, top, dc, expedition: exp, dropPoint: drop, remark: rmk, remarkKhusus: rmkKhusus },
+        items
+      });
+
+      doData.sort((a, b) => parseIdDate(a.invoiceDate) - parseIdDate(b.invoiceDate));
+      document.getElementById('searchInput').value = '';
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('expeditionFilter').value = '';
+      buildList(doData);
+      closeDrawer();
     }
 
     const monthMap = { 'Januari':1,'Februari':2,'Maret':3,'April':4,'Mei':5,'Juni':6,'Juli':7,'Agustus':8,'September':9,'Oktober':10,'November':11,'Desember':12 };

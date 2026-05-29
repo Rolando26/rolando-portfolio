@@ -35,7 +35,7 @@
   .btn-back:hover { background: #f3f4f6; border-color: #9ca3af; transform: translateY(-1px); }
 
   /* Stats */
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
   .stat-card {
     background: #fff; border: 1px solid #e5e7eb; border-radius: 16px;
     padding: 20px 22px; box-shadow: 0 2px 10px rgba(15,23,42,0.05);
@@ -47,12 +47,14 @@
   .stat-card .s-val { font-size: 34px; font-weight: 700; line-height: 1; }
   .stat-card .s-sub { font-size: 12px; color: #9ca3af; margin-top: 8px; }
   .stat-card.total .s-val { color: #111827; }
-  .stat-card.ok .s-val { color: #16a34a; }
-  .stat-card.wait .s-val { color: #d97706; }
+  .stat-card.s1 .s-val { color: #2563eb; }
+  .stat-card.s2 .s-val { color: #d97706; }
+  .stat-card.s3 .s-val { color: #16a34a; }
   .s-bar { height: 5px; border-radius: 999px; background: #f3f4f6; margin-top: 12px; overflow: hidden; }
   .s-bar-fill { height: 100%; border-radius: 999px; }
-  .stat-card.ok .s-bar-fill { background: #16a34a; }
-  .stat-card.wait .s-bar-fill { background: #d97706; }
+  .stat-card.s1 .s-bar-fill { background: #2563eb; }
+  .stat-card.s2 .s-bar-fill { background: #d97706; }
+  .stat-card.s3 .s-bar-fill { background: #16a34a; }
 
   /* Filter */
   .toolbar {
@@ -66,8 +68,9 @@
   }
   .filter-pill:hover { border-color: #9ca3af; color: #374151; }
   .filter-pill.active { background: #111827; color: #fff; border-color: #111827; }
-  .filter-pill.f-ok.active { background: #16a34a; border-color: #16a34a; }
-  .filter-pill.f-wait.active { background: #d97706; border-color: #d97706; }
+  .filter-pill.f-s1.active { background: #2563eb; border-color: #2563eb; }
+  .filter-pill.f-s2.active { background: #d97706; border-color: #d97706; }
+  .filter-pill.f-s3.active { background: #16a34a; border-color: #16a34a; }
   .result-info { margin-left: auto; font-size: 12px; color: #9ca3af; font-weight: 500; }
 
   /* Badge */
@@ -76,10 +79,11 @@
     padding: 4px 11px; border-radius: 999px;
     font-size: 11px; font-weight: 700; white-space: nowrap; letter-spacing: 0.02em;
   }
-  .badge.ok { background: #dcfce7; color: #15803d; }
-  .badge.wait { background: #fef3c7; color: #92400e; }
+  .badge.s1 { background: rgba(37,99,235,0.12); color: #2563eb; }
+  .badge.s2 { background: #fef3c7; color: #92400e; }
+  .badge.s3 { background: #dcfce7; color: #15803d; }
 
-  /* ─── Desktop table ─── */
+  /* Desktop table */
   .table-wrap {
     background: #fff; border: 1px solid #e5e7eb; border-radius: 16px;
     overflow: hidden; box-shadow: 0 2px 14px rgba(15,23,42,0.06);
@@ -106,7 +110,7 @@
   td.resi { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #6b7280; min-width: 130px; vertical-align: middle; }
   td.status { vertical-align: middle; }
 
-  /* ─── Mobile cards ─── */
+  /* Mobile cards */
   .card-list { display: none; flex-direction: column; gap: 12px; }
   .do-card {
     background: #fff; border: 1px solid #e5e7eb; border-radius: 16px;
@@ -126,21 +130,19 @@
   .card-meta .kirim-label { font-size: 12px; color: #6b7280; }
   .card-meta .resi-val { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #9ca3af; }
 
-  /* ─── Responsive ─── */
+  /* Responsive */
   @media (max-width: 800px) {
     .table-wrap { display: none; }
     .card-list { display: flex; }
   }
-  @media (max-width: 680px) {
+  @media (max-width: 900px) {
     .stats { grid-template-columns: 1fr 1fr; }
-    .stats .stat-card:first-child { grid-column: span 2; }
     .stat-card .s-val { font-size: 28px; }
   }
   @media (max-width: 480px) {
     .page { padding: 14px 12px 36px; }
     .header h1 { font-size: 20px; }
-    .stats { grid-template-columns: 1fr; }
-    .stats .stat-card:first-child { grid-column: span 1; }
+    .stats { grid-template-columns: 1fr 1fr; }
     .result-info { display: none; }
   }
 </style>
@@ -151,7 +153,7 @@
   <div class="header">
     <div>
       <h1>Rekap Delivery Order</h1>
-      <p class="sub">Tanggal cetak: 28 Mei 2026 &nbsp;&middot;&nbsp; Total 58 DO</p>
+      <p class="sub">Tanggal cetak: 28 Mei 2026 &nbsp;&middot;&nbsp; Total <span id="hTotal"></span> DO</p>
     </div>
     <a href="dashboard_do.html" class="btn-back">&#8592; Dashboard</a>
   </div>
@@ -159,27 +161,34 @@
   <div class="stats">
     <div class="stat-card total">
       <div class="s-label">Total DO</div>
-      <div class="s-val">58</div>
+      <div class="s-val" id="statTotal"></div>
       <div class="s-sub">Semua pengiriman bulan ini</div>
     </div>
-    <div class="stat-card ok">
-      <div class="s-label">Sudah Terkirim</div>
-      <div class="s-val">21</div>
-      <div class="s-sub">36% dari total DO</div>
-      <div class="s-bar"><div class="s-bar-fill" style="width:36%"></div></div>
+    <div class="stat-card s1">
+      <div class="s-label">DO Dibuat</div>
+      <div class="s-val" id="statS1"></div>
+      <div class="s-sub" id="statS1Pct"></div>
+      <div class="s-bar"><div class="s-bar-fill" id="barS1"></div></div>
     </div>
-    <div class="stat-card wait">
-      <div class="s-label">Belum Terkirim</div>
-      <div class="s-val">37</div>
-      <div class="s-sub">64% dari total DO</div>
-      <div class="s-bar"><div class="s-bar-fill" style="width:64%"></div></div>
+    <div class="stat-card s2">
+      <div class="s-label">Surat Jalan</div>
+      <div class="s-val" id="statS2"></div>
+      <div class="s-sub" id="statS2Pct"></div>
+      <div class="s-bar"><div class="s-bar-fill" id="barS2"></div></div>
+    </div>
+    <div class="stat-card s3">
+      <div class="s-label">Terkirim</div>
+      <div class="s-val" id="statS3"></div>
+      <div class="s-sub" id="statS3Pct"></div>
+      <div class="s-bar"><div class="s-bar-fill" id="barS3"></div></div>
     </div>
   </div>
 
   <div class="toolbar">
-    <button class="filter-pill active"    onclick="setFilter('all',this)">Semua (58)</button>
-    <button class="filter-pill f-ok"      onclick="setFilter('ok',this)">Terkirim (21)</button>
-    <button class="filter-pill f-wait"    onclick="setFilter('wait',this)">Belum Kirim (37)</button>
+    <button class="filter-pill active" id="btnAll" onclick="setFilter(0,this)">Semua</button>
+    <button class="filter-pill f-s1"   id="btnS1"  onclick="setFilter(1,this)">DO Dibuat</button>
+    <button class="filter-pill f-s2"   id="btnS2"  onclick="setFilter(2,this)">Surat Jalan</button>
+    <button class="filter-pill f-s3"   id="btnS3"  onclick="setFilter(3,this)">Terkirim</button>
     <span class="result-info" id="resultInfo"></span>
   </div>
 
@@ -203,190 +212,140 @@
 
 </div>
 <script>
-const data = [
-  {status:'ok', toko:'PT. Sinar Utama', kirim:'23 Mei 2026', resi:'JNE1234567890',
-   items:[['Minyak Goreng 1L',36],['Beras 5kg',24],['Sabun Mandi 80gr',120]]},
-  {status:'wait', toko:'PT. Mawar Jaya', kirim:'21 Mei 2026', resi:'SCP0987654321',
-   items:[['Roti Tawar 500gr',60],['Susu UHT 1L',80],['Biskuit Cokelat 150gr',40]]},
-  {status:'ok', toko:'CV. Mitra Fresh', kirim:'19 Mei 2026', resi:'WNH3216549870',
-   items:[['Sereal Box',50],['Tea Bag 50 pcs',70]]},
-  {status:'wait', toko:'PT. Prima Kencana', kirim:'26 Mei 2026', resi:'JNE9283746501',
-   items:[['Air Mineral 600ml',96],['Snack Kentang',72],['Mayones 250gr',36]]},
-  {status:'ok', toko:'PT. Cahaya Logistik', kirim:'24 Mei 2026', resi:'SCP5647382910',
-   items:[['Minyak Kayu Putih 60ml',30],['Shampoo 330ml',55],['Tissue Basah 10 pack',45]]},
-  {status:'wait', toko:'UD. Karya Maju', kirim:'25 Mei 2026', resi:'WNH2917364508',
-   items:[['Kopi Sachet 10pcs',120],['Gula Pasir 1kg',80],['Susu Kental Manis 370gr',50]]},
-  {status:'ok', toko:'PT. Dua Saudara', kirim:'20 Mei 2026', resi:'JNE1122334455',
-   items:[['Susu Bubuk 400gr',40],['Cokelat Batangan 100gr',90]]},
-  {status:'wait', toko:'PT. Indo Sukses', kirim:'27 Mei 2026', resi:'SCP6677889900',
-   items:[['Kecap Manis 620ml',50],['Sambal Botol 335gr',70],['Susu Cokelat 250ml',100]]},
-  {status:'ok', toko:'PT. Lintang Logistik', kirim:'10 Mei 2026', resi:'JNE000000009',
-   items:[['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20],['Beras Premium 5kg',30]]},
-  {status:'wait', toko:'CV. Prima Sejahtera', kirim:'11 Mei 2026', resi:'SCP000000010',
-   items:[['Minyak Goreng 2L',20],['Beras Premium 5kg',30],['Susu UHT 1L',40],['Kopi Aromatic 150gr',50]]},
-  {status:'wait', toko:'PT. Bumi Sentosa', kirim:'12 Mei 2026', resi:'WNH000000011',
-   items:[['Beras Premium 5kg',30],['Susu UHT 1L',40],['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60],['Roti Gandum',20]]},
-  {status:'ok', toko:'UD. Cahaya Sejati', kirim:'13 Mei 2026', resi:'JNE000000012',
-   items:[['Susu UHT 1L',40],['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60]]},
-  {status:'wait', toko:'PT. Megah Niaga', kirim:'14 Mei 2026', resi:'SCP000000013',
-   items:[['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60],['Roti Gandum',20],['Sereal Muesli 300gr',30]]},
-  {status:'wait', toko:'CV. Sari Agung', kirim:'15 Mei 2026', resi:'WNH000000014',
-   items:[['Tepung Terigu 1kg',60],['Roti Gandum',20],['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50]]},
-  {status:'ok', toko:'PT. Kencana Abadi', kirim:'16 Mei 2026', resi:'JNE000000015',
-   items:[['Roti Gandum',20],['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40]]},
-  {status:'wait', toko:'UD. Makmur Bersama', kirim:'17 Mei 2026', resi:'SCP000000016',
-   items:[['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60]]},
-  {status:'wait', toko:'PT. Global Maju', kirim:'18 Mei 2026', resi:'WNH000000017',
-   items:[['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20],['Beras Premium 5kg',30]]},
-  {status:'ok', toko:'CV. Sukses Sentosa', kirim:'19 Mei 2026', resi:'JNE000000018',
-   items:[['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20]]},
-  {status:'wait', toko:'PT. Lintang Logistik', kirim:'20 Mei 2026', resi:'SCP000000019',
-   items:[['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20],['Beras Premium 5kg',30],['Susu UHT 1L',40]]},
-  {status:'wait', toko:'CV. Prima Sejahtera', kirim:'21 Mei 2026', resi:'WNH000000020',
-   items:[['Minyak Goreng 2L',20],['Beras Premium 5kg',30],['Susu UHT 1L',40],['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60]]},
-  {status:'ok', toko:'PT. Bumi Sentosa', kirim:'22 Mei 2026', resi:'JNE000000021',
-   items:[['Beras Premium 5kg',30],['Susu UHT 1L',40],['Kopi Aromatic 150gr',50]]},
-  {status:'wait', toko:'UD. Cahaya Sejati', kirim:'23 Mei 2026', resi:'SCP000000022',
-   items:[['Susu UHT 1L',40],['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60],['Roti Gandum',20]]},
-  {status:'wait', toko:'PT. Megah Niaga', kirim:'24 Mei 2026', resi:'WNH000000023',
-   items:[['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60],['Roti Gandum',20],['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40]]},
-  {status:'ok', toko:'CV. Sari Agung', kirim:'25 Mei 2026', resi:'JNE000000024',
-   items:[['Tepung Terigu 1kg',60],['Roti Gandum',20],['Sereal Muesli 300gr',30]]},
-  {status:'wait', toko:'PT. Kencana Abadi', kirim:'26 Mei 2026', resi:'SCP000000025',
-   items:[['Roti Gandum',20],['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50]]},
-  {status:'wait', toko:'UD. Makmur Bersama', kirim:'27 Mei 2026', resi:'WNH000000026',
-   items:[['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20]]},
-  {status:'ok', toko:'PT. Global Maju', kirim:'28 Mei 2026', resi:'JNE000000027',
-   items:[['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60]]},
-  {status:'wait', toko:'CV. Sukses Sentosa', kirim:'1 Mei 2026', resi:'SCP000000028',
-   items:[['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20],['Beras Premium 5kg',30]]},
-  {status:'wait', toko:'PT. Lintang Logistik', kirim:'2 Mei 2026', resi:'WNH000000029',
-   items:[['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20],['Beras Premium 5kg',30],['Susu UHT 1L',40],['Kopi Aromatic 150gr',50]]},
-  {status:'ok', toko:'CV. Prima Sejahtera', kirim:'3 Mei 2026', resi:'JNE000000030',
-   items:[['Minyak Goreng 2L',20],['Beras Premium 5kg',30],['Susu UHT 1L',40]]},
-  {status:'wait', toko:'PT. Bumi Sentosa', kirim:'4 Mei 2026', resi:'SCP000000031',
-   items:[['Beras Premium 5kg',30],['Susu UHT 1L',40],['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60]]},
-  {status:'wait', toko:'UD. Cahaya Sejati', kirim:'5 Mei 2026', resi:'WNH000000032',
-   items:[['Susu UHT 1L',40],['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60],['Roti Gandum',20],['Sereal Muesli 300gr',30]]},
-  {status:'ok', toko:'PT. Megah Niaga', kirim:'6 Mei 2026', resi:'JNE000000033',
-   items:[['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60],['Roti Gandum',20]]},
-  {status:'wait', toko:'CV. Sari Agung', kirim:'7 Mei 2026', resi:'SCP000000034',
-   items:[['Tepung Terigu 1kg',60],['Roti Gandum',20],['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40]]},
-  {status:'wait', toko:'PT. Kencana Abadi', kirim:'8 Mei 2026', resi:'WNH000000035',
-   items:[['Roti Gandum',20],['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60]]},
-  {status:'ok', toko:'UD. Makmur Bersama', kirim:'9 Mei 2026', resi:'JNE000000036',
-   items:[['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50]]},
-  {status:'wait', toko:'PT. Global Maju', kirim:'10 Mei 2026', resi:'SCP000000037',
-   items:[['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20]]},
-  {status:'wait', toko:'CV. Sukses Sentosa', kirim:'11 Mei 2026', resi:'WNH000000038',
-   items:[['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20],['Beras Premium 5kg',30],['Susu UHT 1L',40]]},
-  {status:'ok', toko:'PT. Lintang Logistik', kirim:'12 Mei 2026', resi:'JNE000000039',
-   items:[['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20],['Beras Premium 5kg',30]]},
-  {status:'wait', toko:'CV. Prima Sejahtera', kirim:'13 Mei 2026', resi:'SCP000000040',
-   items:[['Minyak Goreng 2L',20],['Beras Premium 5kg',30],['Susu UHT 1L',40],['Kopi Aromatic 150gr',50]]},
-  {status:'wait', toko:'PT. Bumi Sentosa', kirim:'14 Mei 2026', resi:'WNH000000041',
-   items:[['Beras Premium 5kg',30],['Susu UHT 1L',40],['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60],['Roti Gandum',20]]},
-  {status:'ok', toko:'UD. Cahaya Sejati', kirim:'15 Mei 2026', resi:'JNE000000042',
-   items:[['Susu UHT 1L',40],['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60]]},
-  {status:'wait', toko:'PT. Megah Niaga', kirim:'16 Mei 2026', resi:'SCP000000043',
-   items:[['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60],['Roti Gandum',20],['Sereal Muesli 300gr',30]]},
-  {status:'wait', toko:'CV. Sari Agung', kirim:'17 Mei 2026', resi:'WNH000000044',
-   items:[['Tepung Terigu 1kg',60],['Roti Gandum',20],['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50]]},
-  {status:'ok', toko:'PT. Kencana Abadi', kirim:'18 Mei 2026', resi:'JNE000000045',
-   items:[['Roti Gandum',20],['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40]]},
-  {status:'wait', toko:'UD. Makmur Bersama', kirim:'19 Mei 2026', resi:'SCP000000046',
-   items:[['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60]]},
-  {status:'wait', toko:'PT. Global Maju', kirim:'20 Mei 2026', resi:'WNH000000047',
-   items:[['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20],['Beras Premium 5kg',30]]},
-  {status:'ok', toko:'CV. Sukses Sentosa', kirim:'21 Mei 2026', resi:'JNE000000048',
-   items:[['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20]]},
-  {status:'wait', toko:'PT. Lintang Logistik', kirim:'22 Mei 2026', resi:'SCP000000049',
-   items:[['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20],['Beras Premium 5kg',30],['Susu UHT 1L',40]]},
-  {status:'wait', toko:'CV. Prima Sejahtera', kirim:'23 Mei 2026', resi:'WNH000000050',
-   items:[['Minyak Goreng 2L',20],['Beras Premium 5kg',30],['Susu UHT 1L',40],['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60]]},
-  {status:'ok', toko:'PT. Bumi Sentosa', kirim:'24 Mei 2026', resi:'JNE000000051',
-   items:[['Beras Premium 5kg',30],['Susu UHT 1L',40],['Kopi Aromatic 150gr',50]]},
-  {status:'wait', toko:'UD. Cahaya Sejati', kirim:'25 Mei 2026', resi:'SCP000000052',
-   items:[['Susu UHT 1L',40],['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60],['Roti Gandum',20]]},
-  {status:'wait', toko:'PT. Megah Niaga', kirim:'26 Mei 2026', resi:'WNH000000053',
-   items:[['Kopi Aromatic 150gr',50],['Tepung Terigu 1kg',60],['Roti Gandum',20],['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40]]},
-  {status:'ok', toko:'CV. Sari Agung', kirim:'27 Mei 2026', resi:'JNE000000054',
-   items:[['Tepung Terigu 1kg',60],['Roti Gandum',20],['Sereal Muesli 300gr',30]]},
-  {status:'wait', toko:'PT. Kencana Abadi', kirim:'28 Mei 2026', resi:'SCP000000055',
-   items:[['Roti Gandum',20],['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50]]},
-  {status:'wait', toko:'UD. Makmur Bersama', kirim:'1 Mei 2026', resi:'WNH000000056',
-   items:[['Sereal Muesli 300gr',30],['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20]]},
-  {status:'ok', toko:'PT. Global Maju', kirim:'2 Mei 2026', resi:'JNE000000057',
-   items:[['Saus Tomat 560gr',40],['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60]]},
-  {status:'wait', toko:'CV. Sukses Sentosa', kirim:'3 Mei 2026', resi:'SCP000000058',
-   items:[['Biskuit Gandum 120gr',50],['Sambal Terasi 240gr',60],['Minyak Goreng 2L',20],['Beras Premium 5kg',30]]}
+/* ── Data generation: same logic as dashboard_do.html ── */
+const _contacts = [
+  'PT. Lintang Logistik','CV. Prima Sejahtera','PT. Bumi Sentosa',
+  'UD. Cahaya Sejati','PT. Megah Niaga','CV. Sari Agung',
+  'PT. Kencana Abadi','UD. Makmur Bersama','PT. Global Maju','CV. Sukses Sentosa'
+];
+const _exped = ['JNE','SiCepat','Wahana'];
+const _catalog = [
+  'Minyak Goreng 2L','Beras Premium 5kg','Susu UHT 1L',
+  'Kopi Aromatic 150gr','Tepung Terigu 1kg','Roti Gandum',
+  'Sereal Muesli 300gr','Saus Tomat 560gr','Biskuit Gandum 120gr','Sambal Terasi 240gr'
 ];
 
-function render(filterType) {
-  const filtered = filterType === 'all' ? data : data.filter(d => d.status === filterType);
-  document.getElementById('resultInfo').textContent = 'Menampilkan ' + filtered.length + ' dari ' + data.length + ' DO';
+const data = [
+  {stage:3, toko:'PT. Sinar Utama',     kirim:'23 Mei 2026', resi:'JNE1234567890',
+   items:[['Minyak Goreng 1L',36],['Beras 5kg',24],['Sabun Mandi 80gr',120]]},
+  {stage:2, toko:'PT. Mawar Jaya',      kirim:'21 Mei 2026', resi:'SCP0987654321',
+   items:[['Roti Tawar 500gr',60],['Susu UHT 1L',80],['Biskuit Cokelat 150gr',40]]},
+  {stage:3, toko:'CV. Mitra Fresh',     kirim:'19 Mei 2026', resi:'WNH3216549870',
+   items:[['Sereal Box',50],['Tea Bag 50 pcs',70]]},
+  {stage:1, toko:'PT. Prima Kencana',   kirim:'26 Mei 2026', resi:'JNE9283746501',
+   items:[['Air Mineral 600ml',96],['Snack Kentang',72],['Mayones 250gr',36]]},
+  {stage:3, toko:'PT. Cahaya Logistik', kirim:'24 Mei 2026', resi:'SCP5647382910',
+   items:[['Minyak Kayu Putih 60ml',30],['Shampoo 330ml',55],['Tissue Basah 10 pack',45]]},
+  {stage:2, toko:'UD. Karya Maju',      kirim:'25 Mei 2026', resi:'WNH2917364508',
+   items:[['Kopi Sachet 10pcs',120],['Gula Pasir 1kg',80],['Susu Kental Manis 370gr',50]]},
+  {stage:3, toko:'PT. Dua Saudara',     kirim:'20 Mei 2026', resi:'JNE1122334455',
+   items:[['Susu Bubuk 400gr',40],['Cokelat Batangan 100gr',90]]},
+  {stage:1, toko:'PT. Indo Sukses',     kirim:'27 Mei 2026', resi:'SCP6677889900',
+   items:[['Kecap Manis 620ml',50],['Sambal Botol 335gr',70],['Susu Cokelat 250ml',100]]},
+];
 
-  const tbody = document.getElementById('tbody');
-  const cardList = document.getElementById('cardList');
+for (var i = 9; i <= 58; i++) {
+  var toko     = _contacts[(i - 9) % 10];
+  var exp      = _exped[i % 3];
+  var invDay   = (i % 27) + 1;
+  var kirim    = (invDay + 1) + ' Mei 2026';
+  var resi     = (exp === 'JNE' ? 'JNE' : exp === 'SiCepat' ? 'SCP' : 'WNH') + String(1000000000 + i).slice(1);
+  var stage    = i % 3 === 0 ? 3 : i % 3 === 1 ? 1 : 2;
+  var itemCnt  = 3 + (i % 3);
+  var items    = [];
+  for (var j = 0; j < itemCnt; j++) {
+    items.push([_catalog[(i + j) % 10], 20 + ((i + j) % 5) * 10]);
+  }
+  data.push({ stage: stage, toko: toko, kirim: kirim, resi: resi, items: items });
+}
+
+/* ── Sort by shipping date ── */
+const _mth = {Januari:1,Februari:2,Maret:3,April:4,Mei:5,Juni:6,Juli:7,Agustus:8,September:9,Oktober:10,November:11,Desember:12};
+function parseDate(str) {
+  var p = str.split(' ');
+  return new Date(+p[2], _mth[p[1]] - 1, +p[0]);
+}
+data.sort(function(a, b) { return parseDate(a.kirim) - parseDate(b.kirim); });
+
+/* ── Init stats & button labels ── */
+var cnt1  = data.filter(function(d){ return d.stage === 1; }).length;
+var cnt2  = data.filter(function(d){ return d.stage === 2; }).length;
+var cnt3  = data.filter(function(d){ return d.stage === 3; }).length;
+var cntAll = data.length;
+function pct(n) { return Math.round(n / cntAll * 100); }
+
+document.getElementById('hTotal').textContent    = cntAll;
+document.getElementById('statTotal').textContent = cntAll;
+document.getElementById('statS1').textContent    = cnt1;
+document.getElementById('statS2').textContent    = cnt2;
+document.getElementById('statS3').textContent    = cnt3;
+document.getElementById('statS1Pct').textContent = pct(cnt1) + '% dari total DO';
+document.getElementById('statS2Pct').textContent = pct(cnt2) + '% dari total DO';
+document.getElementById('statS3Pct').textContent = pct(cnt3) + '% dari total DO';
+document.getElementById('barS1').style.width = pct(cnt1) + '%';
+document.getElementById('barS2').style.width = pct(cnt2) + '%';
+document.getElementById('barS3').style.width = pct(cnt3) + '%';
+document.getElementById('btnAll').textContent = 'Semua (' + cntAll + ')';
+document.getElementById('btnS1').textContent  = 'DO Dibuat (' + cnt1 + ')';
+document.getElementById('btnS2').textContent  = 'Surat Jalan (' + cnt2 + ')';
+document.getElementById('btnS3').textContent  = 'Terkirim (' + cnt3 + ')';
+
+/* ── Render ── */
+var _stageLabel = { 1:'DO Dibuat', 2:'Surat Jalan', 3:'Terkirim' };
+var _stageCls   = { 1:'s1', 2:'s2', 3:'s3' };
+
+function render(filterStage) {
+  var filtered = filterStage === 0 ? data : data.filter(function(d){ return d.stage === filterStage; });
+  document.getElementById('resultInfo').textContent = 'Menampilkan ' + filtered.length + ' dari ' + cntAll + ' DO';
+
+  var tbody    = document.getElementById('tbody');
+  var cardList = document.getElementById('cardList');
   tbody.innerHTML = '';
   cardList.innerHTML = '';
 
   filtered.forEach(function(d, i) {
-    const no = i + 1;
-    const badge = d.status === 'ok'
-      ? '<span class="badge ok">Terkirim</span>'
-      : '<span class="badge wait">Belum Kirim</span>';
-    const resiText = d.status === 'ok' ? d.resi : '&mdash;';
-    const kirimText = d.status === 'ok' ? d.kirim : '&mdash;';
-    const itemsHtml = d.items.map(function(it) {
+    var no         = i + 1;
+    var isShipped  = d.stage === 3;
+    var badge      = '<span class="badge ' + _stageCls[d.stage] + '">' + _stageLabel[d.stage] + '</span>';
+    var resiText   = isShipped ? d.resi : '&mdash;';
+    var kirimText  = isShipped ? d.kirim : '&mdash;';
+    var itemsHtml  = d.items.map(function(it){
       return '<div class="item-row"><span class="iname">' + it[0] + '</span><span class="iqty">' + it[1] + ' pcs</span></div>';
     }).join('');
 
-    // Table row
-    const tr = document.createElement('tr');
+    var tr = document.createElement('tr');
     tr.innerHTML =
-      '<td class="no">' + no + '</td>' +
-      '<td class="toko">' + d.toko + '</td>' +
+      '<td class="no">'    + no        + '</td>' +
+      '<td class="toko">'  + d.toko    + '</td>' +
       '<td class="barang"><div class="item-list">' + itemsHtml + '</div></td>' +
       '<td class="kirim">' + kirimText + '</td>' +
-      '<td class="resi">' + resiText + '</td>' +
-      '<td class="status">' + badge + '</td>';
+      '<td class="resi">'  + resiText  + '</td>' +
+      '<td class="status">'+ badge     + '</td>';
     tbody.appendChild(tr);
 
-    // Mobile card
-    const card = document.createElement('div');
+    var card = document.createElement('div');
     card.className = 'do-card';
     card.innerHTML =
       '<div class="card-top">' +
-        '<div class="left">' +
-          '<span class="card-no">#' + no + '</span>' +
-          '<span class="card-toko">' + d.toko + '</span>' +
-        '</div>' +
+        '<div class="left"><span class="card-no">#' + no + '</span><span class="card-toko">' + d.toko + '</span></div>' +
         badge +
       '</div>' +
       '<div class="card-items">' + itemsHtml + '</div>' +
       '<div class="card-meta">' +
-        '<span class="kirim-label">' + (d.status === 'ok' ? 'Kirim: ' + d.kirim : 'Belum ada jadwal kirim') + '</span>' +
-        '<span class="resi-val">' + (d.status === 'ok' ? d.resi : '') + '</span>' +
+        '<span class="kirim-label">' + (isShipped ? 'Kirim: ' + d.kirim : 'Belum dikirim') + '</span>' +
+        '<span class="resi-val">'    + (isShipped ? d.resi : '') + '</span>' +
       '</div>';
     cardList.appendChild(card);
   });
 }
 
-function setFilter(type, btn) {
-  document.querySelectorAll('.filter-pill').forEach(function(b) { b.classList.remove('active'); });
+function setFilter(stage, btn) {
+  document.querySelectorAll('.filter-pill').forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
-  render(type);
+  render(stage);
 }
 
-const monthMap = {Januari:1,Februari:2,Maret:3,April:4,Mei:5,Juni:6,Juli:7,Agustus:8,September:9,Oktober:10,November:11,Desember:12};
-function parseDate(str) {
-  const p = str.split(' ');
-  return new Date(+p[2], monthMap[p[1]] - 1, +p[0]);
-}
-data.sort(function(a, b) { return parseDate(a.kirim) - parseDate(b.kirim); });
-
-render('all');
+render(0);
 </script>
 </body>
 </html>
