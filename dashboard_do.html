@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delivery Order Dashboard</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f5f6;
+      --surface: #ffffff;
+      --surface-muted: #f1f3f5;
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --border: #d1d5db;
+      --header-bg: #111827;
+      --header-text: #f9fafb;
+      --primary: #2563eb;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+      color: var(--text);
+    }
+    .page { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+    .header h1 { margin: 0; font-size: 28px; letter-spacing: -.02em; }
+    .header p { margin: 4px 0 0; color: var(--text-muted); }
+    .card, .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); }
+    .panel { padding: 24px; }
+    .badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.45rem 0.75rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; }
+    .badge.success { background: rgba(22, 163, 74, 0.12); color: var(--success); }
+    .badge.empty { color: var(--text-muted); background: rgba(209, 213, 219, 0.45); }
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 900px; }
+    th, td { padding: 14px 16px; text-align: left; vertical-align: middle; border-bottom: 1px solid #e5e7eb; }
+    thead th { background: var(--header-bg); color: var(--header-text); font-weight: 600; letter-spacing: 0.01em; }
+    tbody tr:hover { background: #f8fafc; }
+    td a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    td a:hover { text-decoration: underline; }
+    .detail-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0.85rem 1rem; border-radius: 999px; border: 1px solid transparent; cursor: pointer; font-weight: 600; transition: transform .15s ease, background .15s ease, border-color .15s ease; }
+    .button.back { background: #ffffff; color: var(--text); border-color: #d1d5db; }
+    .button.back:hover { transform: translateY(-1px); background: #f8fafc; }
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(12, 1fr); }
+    .grid-col-6 { grid-column: span 6; }
+    .info-card { padding: 20px; border-radius: 16px; background: var(--surface); border: 1px solid #e5e7eb; }
+    .info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .info-item { display: flex; flex-direction: column; gap: 4px; }
+    .info-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.04em; }
+    .info-value { font-size: 0.98rem; font-weight: 700; color: var(--text); }
+    .info-value.bold { font-size: 1.15rem; }
+    .summary { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; padding: 16px 0; color: var(--text); }
+    .summary span { display: inline-flex; gap: 6px; }
+    .summary strong { font-weight: 700; }
+    .hidden { display: none; }
+    .detail-title { margin: 0; font-size: 22px; }
+    .badge-light { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
+    @media (max-width: 980px) {
+      .info-grid { grid-template-columns: 1fr; }
+      .grid-col-6 { grid-column: span 12; }
+      .header { flex-direction: column; align-items: flex-start; }
+      .detail-header { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div>
+        <h1>Delivery Order Dashboard</h1>
+        <p>Simulasi sistem Delivery Order untuk keperluan testing internal.</p>
+      </div>
+    </div>
+
+    <section id="listView" class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;">
+        <div>
+          <p style="margin:0;font-size:0.95rem;color:var(--text-muted);">HALAMAN UTAMA - LIST DO</p>
+          <h2 style="margin:6px 0 0;font-size:1.35rem;color:var(--text);">Daftar Delivery Order</h2>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:48px;">#</th>
+              <th>Status Proses</th>
+              <th>No. DO</th>
+              <th>Kode Kontak</th>
+              <th>Nama Kontak</th>
+              <th>No. Invoice</th>
+              <th>Tgl. Invoice</th>
+              <th>No. Shipping</th>
+              <th>Tgl. Shipping</th>
+              <th>No. Resi</th>
+            </tr>
+          </thead>
+          <tbody id="doListBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="detailView" class="panel hidden">
+      <div class="detail-header">
+        <button class="button back" onclick="showList()">← Kembali ke List DO</button>
+        <div style="margin-left:auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+          <span class="badge badge-light">Detail DO</span>
+          <h2 class="detail-title" id="detailTitle">No. DO 00123</h2>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-bottom:24px;">
+        <div class="grid-col-6">
+          <div class="info-card">
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">No. DO</span>
+                <span class="info-value" id="detailDoNumber"></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Tanggal</span>
+                <span class="info-value" id="detailDate"></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Kontak</span>
+                <span class="info-value" id="detailContact"></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">TOP</span>
+                <span class="info-value" id="detailTop"></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">DC</span>
+                <span class="info-value" id="detailDc"></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Ekspedisi</span>
+                <span class="info-value" id="detailExpedition"></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Drop Point</span>
+                <span class="info-value" id="detailDropPoint"></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Remark</span>
+                <span class="info-value" id="detailRemark"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:44px;">No</th>
+              <th>Item Code</th>
+              <th>Item Name</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Disc%</th>
+              <th>Disc Value</th>
+              <th>Disc Promo</th>
+              <th>Nett</th>
+              <th>Sub Total</th>
+              <th>Remark</th>
+            </tr>
+          </thead>
+          <tbody id="detailItemsBody"></tbody>
+        </table>
+      </div>
+      <div class="summary">
+        <span><strong>Total Qty:</strong> <span id="detailQtyTotal"></span></span>
+        <span><strong>Total:</strong> <span id="detailTotal"></span></span>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const doData = [
+      {
+        id: 'DO-2026-001', status: 'Sudah Terkirim', kodeKontak: 'KTC-0301', namaKontak: 'PT. Sinar Utama',
+        invoice: 'INV-2301-001', invoiceDate: '22 Mei 2026', shippingNo: 'SHP-76222', shippingDate: '23 Mei 2026', resi: 'JNE1234567890',
+        info: { date: '22 Mei 2026', contact: 'PT. Sinar Utama', top: 'COD', dc: 'Jakarta Barat', expedition: 'JNE', dropPoint: 'Gudang Cengkareng', remark: 'Ambil Sendiri' },
+        items: [
+          { code: 'CG-1001', name: 'Minyak Goreng 1L', qty: 36, price: 28000, discPct: 5, discPromo: 'Promo Lebaran', remark: '-' },
+          { code: 'CG-1022', name: 'Beras 5kg', qty: 24, price: 98000, discPct: 10, discPromo: '-', remark: '-' },
+          { code: 'CG-1130', name: 'Sabun Mandi 80gr', qty: 120, price: 4200, discPct: 0, discPromo: '-', remark: '-' }
+        ]
+      },
+      {
+        id: 'DO-2026-002', status: '', kodeKontak: 'KTC-0219', namaKontak: 'PT. Mawar Jaya',
+        invoice: 'INV-2301-015', invoiceDate: '20 Mei 2026', shippingNo: 'SHP-76225', shippingDate: '21 Mei 2026', resi: 'SCP0987654321',
+        info: { date: '20 Mei 2026', contact: 'PT. Mawar Jaya', top: '30 Hari', dc: 'Jakarta Selatan', expedition: 'SiCepat', dropPoint: 'Depo Pasar Minggu', remark: '-' },
+        items: [
+          { code: 'CG-2010', name: 'Roti Tawar 500gr', qty: 60, price: 18000, discPct: 0, discPromo: '-', remark: '-' },
+          { code: 'CG-2065', name: 'Susu UHT 1L', qty: 80, price: 22000, discPct: 5, discPromo: 'Diskon Musiman', remark: '-' },
+          { code: 'CG-2099', name: 'Biskuit Cokelat 150gr', qty: 40, price: 15000, discPct: 0, discPromo: '-', remark: '-' }
+        ]
+      },
+      {
+        id: 'DO-2026-003', status: 'Sudah Terkirim', kodeKontak: 'KTC-0484', namaKontak: 'CV. Mitra Fresh',
+        invoice: 'INV-2301-032', invoiceDate: '18 Mei 2026', shippingNo: 'SHP-76247', shippingDate: '19 Mei 2026', resi: 'WNH3216549870',
+        info: { date: '18 Mei 2026', contact: 'CV. Mitra Fresh', top: 'COD', dc: 'Jakarta Timur', expedition: 'Wahana', dropPoint: 'Drop Point Cikarang', remark: 'Ambil Sendiri' },
+        items: [
+          { code: 'CG-3021', name: 'Sereal Box', qty: 50, price: 32000, discPct: 8, discPromo: 'Promo Natal', remark: '-' },
+          { code: 'CG-3077', name: 'Tea Bag 50 pcs', qty: 70, price: 19500, discPct: 0, discPromo: '-', remark: '-' }
+        ]
+      },
+      {
+        id: 'DO-2026-004', status: '', kodeKontak: 'KTC-0194', namaKontak: 'PT. Prima Kencana',
+        invoice: 'INV-2301-049', invoiceDate: '25 Mei 2026', shippingNo: 'SHP-76259', shippingDate: '26 Mei 2026', resi: 'JNE9283746501',
+        info: { date: '25 Mei 2026', contact: 'PT. Prima Kencana', top: '30 Hari', dc: 'Jakarta Utara', expedition: 'JNE', dropPoint: 'Gudang Ancol', remark: '-' },
+        items: [
+          { code: 'CG-4083', name: 'Air Mineral 600ml', qty: 96, price: 9000, discPct: 3, discPromo: 'Voucher', remark: '-' },
+          { code: 'CG-4100', name: 'Snack Kentang', qty: 72, price: 14500, discPct: 5, discPromo: '-', remark: '-' },
+          { code: 'CG-4114', name: 'Mayones 250gr', qty: 36, price: 26000, discPct: 0, discPromo: '-', remark: '-' }
+        ]
+      },
+      {
+        id: 'DO-2026-005', status: 'Sudah Terkirim', kodeKontak: 'KTC-0341', namaKontak: 'PT. Cahaya Logistik',
+        invoice: 'INV-2301-058', invoiceDate: '23 Mei 2026', shippingNo: 'SHP-76263', shippingDate: '24 Mei 2026', resi: 'SCP5647382910',
+        info: { date: '23 Mei 2026', contact: 'PT. Cahaya Logistik', top: 'COD', dc: 'Jakarta Barat', expedition: 'SiCepat', dropPoint: 'Gudang Kebon Jeruk', remark: '-' },
+        items: [
+          { code: 'CG-5122', name: 'Minyak Kayu Putih 60ml', qty: 30, price: 15000, discPct: 0, discPromo: '-', remark: '-' },
+          { code: 'CG-5188', name: 'Shampoo 330ml', qty: 55, price: 27000, discPct: 7, discPromo: 'Kupon', remark: '-' },
+          { code: 'CG-5230', name: 'Tissue Basah 10 pack', qty: 45, price: 21000, discPct: 5, discPromo: '-', remark: '-' }
+        ]
+      },
+      {
+        id: 'DO-2026-006', status: '', kodeKontak: 'KTC-0058', namaKontak: 'UD. Karya Maju',
+        invoice: 'INV-2301-064', invoiceDate: '24 Mei 2026', shippingNo: 'SHP-76268', shippingDate: '25 Mei 2026', resi: 'WNH2917364508',
+        info: { date: '24 Mei 2026', contact: 'UD. Karya Maju', top: '30 Hari', dc: 'Jakarta Selatan', expedition: 'Wahana', dropPoint: 'Depo Bintaro', remark: '-' },
+        items: [
+          { code: 'CG-6010', name: 'Kopi Sachet 10pcs', qty: 120, price: 7200, discPct: 10, discPromo: 'Beli 10 Gratis 1', remark: '-' },
+          { code: 'CG-6055', name: 'Gula Pasir 1kg', qty: 80, price: 15500, discPct: 0, discPromo: '-', remark: '-' },
+          { code: 'CG-6090', name: 'Susu Kental Manis 370gr', qty: 50, price: 19000, discPct: 5, discPromo: '-', remark: '-' }
+        ]
+      },
+      {
+        id: 'DO-2026-007', status: 'Sudah Terkirim', kodeKontak: 'KTC-0122', namaKontak: 'PT. Dua Saudara',
+        invoice: 'INV-2301-077', invoiceDate: '19 Mei 2026', shippingNo: 'SHP-76273', shippingDate: '20 Mei 2026', resi: 'JNE1122334455',
+        info: { date: '19 Mei 2026', contact: 'PT. Dua Saudara', top: 'COD', dc: 'Jakarta Pusat', expedition: 'JNE', dropPoint: 'Gudang Harmoni', remark: '-' },
+        items: [
+          { code: 'CG-7044', name: 'Susu Bubuk 400gr', qty: 40, price: 68000, discPct: 5, discPromo: '-', remark: '-' },
+          { code: 'CG-7098', name: 'Cokelat Batangan 100gr', qty: 90, price: 12000, discPct: 0, discPromo: '-', remark: '-' }
+        ]
+      },
+      {
+        id: 'DO-2026-008', status: '', kodeKontak: 'KTC-0275', namaKontak: 'PT. Indo Sukses',
+        invoice: 'INV-2301-082', invoiceDate: '26 Mei 2026', shippingNo: 'SHP-76279', shippingDate: '27 Mei 2026', resi: 'SCP6677889900',
+        info: { date: '26 Mei 2026', contact: 'PT. Indo Sukses', top: '30 Hari', dc: 'Jakarta Timur', expedition: 'SiCepat', dropPoint: 'Gudang Pulogadung', remark: '-' },
+        items: [
+          { code: 'CG-8011', name: 'Kecap Manis 620ml', qty: 50, price: 22000, discPct: 0, discPromo: '-', remark: '-' },
+          { code: 'CG-8054', name: 'Sambal Botol 335gr', qty: 70, price: 18000, discPct: 5, discPromo: 'Diskon Paket', remark: '-' },
+          { code: 'CG-8090', name: 'Susu Cokelat 250ml', qty: 100, price: 12500, discPct: 0, discPromo: '-', remark: '-' }
+        ]
+      }
+    ];
+
+    const extraContacts = [
+      { kode: 'KTC-0432', nama: 'PT. Lintang Logistik' },
+      { kode: 'KTC-0547', nama: 'CV. Prima Sejahtera' },
+      { kode: 'KTC-0658', nama: 'PT. Bumi Sentosa' },
+      { kode: 'KTC-0721', nama: 'UD. Cahaya Sejati' },
+      { kode: 'KTC-0813', nama: 'PT. Megah Niaga' },
+      { kode: 'KTC-0924', nama: 'CV. Sari Agung' },
+      { kode: 'KTC-1036', nama: 'PT. Kencana Abadi' },
+      { kode: 'KTC-1147', nama: 'UD. Makmur Bersama' },
+      { kode: 'KTC-1258', nama: 'PT. Global Maju' },
+      { kode: 'KTC-1369', nama: 'CV. Sukses Sentosa' }
+    ];
+
+    const expeditionList = ['JNE', 'SiCepat', 'Wahana'];
+    const dcList = ['Jakarta Barat', 'Jakarta Selatan', 'Jakarta Timur', 'Jakarta Utara', 'Jakarta Pusat'];
+    const topList = ['COD', '30 Hari'];
+    const dropPoints = ['Gudang Cengkareng', 'Depo Pasar Minggu', 'Gudang Ancol', 'Depo Bintaro', 'Gudang Pulogadung', 'Gudang Harmoni', 'Gudang Kebon Jeruk'];
+    const remarks = ['Ambil Sendiri', '-'];
+    const promoList = ['Promo Musim', 'Voucher', 'Diskon Paket', 'Promo Bayar Cepat', '-'];
+    const itemCatalog = [
+      { code: 'CG-9101', name: 'Minyak Goreng 2L', price: 54000 },
+      { code: 'CG-9202', name: 'Beras Premium 5kg', price: 102000 },
+      { code: 'CG-9303', name: 'Susu UHT 1L', price: 22000 },
+      { code: 'CG-9404', name: 'Kopi Aromatic 150gr', price: 28500 },
+      { code: 'CG-9505', name: 'Tepung Terigu 1kg', price: 13400 },
+      { code: 'CG-9606', name: 'Roti Gandum', price: 19000 },
+      { code: 'CG-9707', name: 'Sereal Muesli 300gr', price: 41000 },
+      { code: 'CG-9808', name: 'Saus Tomat 560gr', price: 17000 },
+      { code: 'CG-9909', name: 'Biskuit Gandum 120gr', price: 12000 },
+      { code: 'CG-1010', name: 'Sambal Terasi 240gr', price: 18500 }
+    ];
+
+    for (let index = 9; index <= 58; index += 1) {
+      const contact = extraContacts[(index - 9) % extraContacts.length];
+      const status = index % 3 === 0 ? 'Sudah Terkirim' : '';
+      const expedition = expeditionList[index % expeditionList.length];
+      const dc = dcList[index % dcList.length];
+      const top = topList[index % topList.length];
+      const shippingDate = `${(index % 28) + 1} Mei 2026`;
+      const invoiceDate = `${((index + 1) % 28) + 1} Mei 2026`;
+      const invoiceNo = `INV-2301-${String(80 + index).padStart(3, '0')}`;
+      const shippingNo = `SHP-76${String(280 + index).padStart(3, '0')}`;
+      const resi = `${expedition === 'JNE' ? 'JNE' : expedition === 'SiCepat' ? 'SCP' : 'WNH'}${String(1000000000 + index).slice(1)}`;
+
+      const items = [];
+      const itemCount = 3 + (index % 3);
+      for (let itemIndex = 0; itemIndex < itemCount; itemIndex += 1) {
+        const product = itemCatalog[(index + itemIndex) % itemCatalog.length];
+        const qty = 20 + ((index + itemIndex) % 5) * 10;
+        const discPct = [0, 5, 10][(index + itemIndex) % 3];
+        const discPromo = discPct ? promoList[(index + itemIndex) % promoList.length] : '-';
+        items.push({
+          code: product.code,
+          name: product.name,
+          qty,
+          price: product.price,
+          discPct,
+          discPromo,
+          remark: '-'
+        });
+      }
+
+      doData.push({
+        id: `DO-2026-${String(index).padStart(3, '0')}`,
+        status,
+        kodeKontak: contact.kode,
+        namaKontak: contact.nama,
+        invoice: invoiceNo,
+        invoiceDate,
+        shippingNo,
+        shippingDate,
+        resi,
+        info: {
+          date: invoiceDate,
+          contact: contact.nama,
+          top,
+          dc,
+          expedition,
+          dropPoint: dropPoints[index % dropPoints.length],
+          remark: remarks[index % remarks.length]
+        },
+        items
+      });
+    }
+
+    function formatRupiah(value) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value);
+    }
+
+    function buildList() {
+      const tbody = document.getElementById('doListBody');
+      tbody.innerHTML = '';
+      doData.forEach((doItem, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${doItem.status ? `<span class="badge success">${doItem.status}</span>` : `<span class="badge empty">&ndash;</span>`}</td>
+          <td><a href="#" onclick="showDetail('${doItem.id}')">${doItem.id}</a></td>
+          <td>${doItem.kodeKontak}</td>
+          <td>${doItem.namaKontak}</td>
+          <td>${doItem.invoice}</td>
+          <td>${doItem.invoiceDate}</td>
+          <td>${doItem.shippingNo}</td>
+          <td>${doItem.shippingDate}</td>
+          <td>${doItem.resi}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function showDetail(id) {
+      const selected = doData.find(item => item.id === id);
+      if (!selected) return;
+      document.getElementById('detailTitle').textContent = `${selected.id}`;
+      document.getElementById('detailDoNumber').textContent = selected.id;
+      document.getElementById('detailDate').textContent = selected.info.date;
+      document.getElementById('detailContact').textContent = selected.info.contact;
+      document.getElementById('detailTop').textContent = selected.info.top;
+      document.getElementById('detailDc').textContent = selected.info.dc;
+      document.getElementById('detailExpedition').textContent = selected.info.expedition;
+      document.getElementById('detailDropPoint').textContent = selected.info.dropPoint;
+      document.getElementById('detailRemark').textContent = selected.info.remark;
+
+      const body = document.getElementById('detailItemsBody');
+      body.innerHTML = '';
+      let totalQty = 0;
+      let totalAmount = 0;
+
+      selected.items.forEach((item, index) => {
+        const discValue = Math.round((item.price * item.qty) * (item.discPct / 100));
+        const nett = item.price - Math.round(item.price * (item.discPct / 100));
+        const subTotal = nett * item.qty;
+        totalQty += item.qty;
+        totalAmount += subTotal;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${item.code}</td>
+          <td>${item.name}</td>
+          <td>${item.qty}</td>
+          <td>${formatRupiah(item.price)}</td>
+          <td>${item.discPct ? item.discPct + '%' : '-'}</td>
+          <td>${item.discPct ? formatRupiah(discValue) : '-'}</td>
+          <td>${item.discPromo}</td>
+          <td>${formatRupiah(nett)}</td>
+          <td>${formatRupiah(subTotal)}</td>
+          <td>${item.remark}</td>
+        `;
+        body.appendChild(row);
+      });
+
+      document.getElementById('detailQtyTotal').textContent = totalQty;
+      document.getElementById('detailTotal').textContent = formatRupiah(totalAmount);
+
+      document.getElementById('listView').classList.add('hidden');
+      document.getElementById('detailView').classList.remove('hidden');
+    }
+
+    function showList() {
+      document.getElementById('detailView').classList.add('hidden');
+      document.getElementById('listView').classList.remove('hidden');
+    }
+
+    buildList();
+  </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+Rekap Delivery Order | 28 Mei 2026
+Total: 58 DO (Terkirim: 21 | Belum: 37)
+================================================================
+
+TERKIRIM
+================================================================
+PT. Sinar Utama/ Minyak Goreng 1L, Beras 5kg, Sabun Mandi 80gr/ 36, 24, 120/ 23 Mei 2026/ JNE1234567890
+CV. Mitra Fresh/ Sereal Box, Tea Bag 50 pcs/ 50, 70/ 19 Mei 2026/ WNH3216549870
+PT. Cahaya Logistik/ Minyak Kayu Putih 60ml, Shampoo 330ml, Tissue Basah 10 pack/ 30, 55, 45/ 24 Mei 2026/ SCP5647382910
+PT. Dua Saudara/ Susu Bubuk 400gr, Cokelat Batangan 100gr/ 40, 90/ 20 Mei 2026/ JNE1122334455
+PT. Lintang Logistik/ Sambal Terasi 240gr, Minyak Goreng 2L, Beras Premium 5kg/ 60, 20, 30/ 10 Mei 2026/ JNE000000009
+UD. Cahaya Sejati/ Susu UHT 1L, Kopi Aromatic 150gr, Tepung Terigu 1kg/ 40, 50, 60/ 13 Mei 2026/ JNE000000012
+PT. Kencana Abadi/ Roti Gandum, Sereal Muesli 300gr, Saus Tomat 560gr/ 20, 30, 40/ 16 Mei 2026/ JNE000000015
+CV. Sukses Sentosa/ Biskuit Gandum 120gr, Sambal Terasi 240gr, Minyak Goreng 2L/ 50, 60, 20/ 19 Mei 2026/ JNE000000018
+PT. Bumi Sentosa/ Beras Premium 5kg, Susu UHT 1L, Kopi Aromatic 150gr/ 30, 40, 50/ 22 Mei 2026/ JNE000000021
+CV. Sari Agung/ Tepung Terigu 1kg, Roti Gandum, Sereal Muesli 300gr/ 60, 20, 30/ 25 Mei 2026/ JNE000000024
+PT. Global Maju/ Saus Tomat 560gr, Biskuit Gandum 120gr, Sambal Terasi 240gr/ 40, 50, 60/ 28 Mei 2026/ JNE000000027
+CV. Prima Sejahtera/ Minyak Goreng 2L, Beras Premium 5kg, Susu UHT 1L/ 20, 30, 40/ 3 Mei 2026/ JNE000000030
+PT. Megah Niaga/ Kopi Aromatic 150gr, Tepung Terigu 1kg, Roti Gandum/ 50, 60, 20/ 6 Mei 2026/ JNE000000033
+UD. Makmur Bersama/ Sereal Muesli 300gr, Saus Tomat 560gr, Biskuit Gandum 120gr/ 30, 40, 50/ 9 Mei 2026/ JNE000000036
+PT. Lintang Logistik/ Sambal Terasi 240gr, Minyak Goreng 2L, Beras Premium 5kg/ 60, 20, 30/ 12 Mei 2026/ JNE000000039
+UD. Cahaya Sejati/ Susu UHT 1L, Kopi Aromatic 150gr, Tepung Terigu 1kg/ 40, 50, 60/ 15 Mei 2026/ JNE000000042
+PT. Kencana Abadi/ Roti Gandum, Sereal Muesli 300gr, Saus Tomat 560gr/ 20, 30, 40/ 18 Mei 2026/ JNE000000045
+CV. Sukses Sentosa/ Biskuit Gandum 120gr, Sambal Terasi 240gr, Minyak Goreng 2L/ 50, 60, 20/ 21 Mei 2026/ JNE000000048
+PT. Bumi Sentosa/ Beras Premium 5kg, Susu UHT 1L, Kopi Aromatic 150gr/ 30, 40, 50/ 24 Mei 2026/ JNE000000051
+CV. Sari Agung/ Tepung Terigu 1kg, Roti Gandum, Sereal Muesli 300gr/ 60, 20, 30/ 27 Mei 2026/ JNE000000054
+PT. Global Maju/ Saus Tomat 560gr, Biskuit Gandum 120gr, Sambal Terasi 240gr/ 40, 50, 60/ 2 Mei 2026/ JNE000000057
+
+================================================================
+BELUM TERKIRIM
+================================================================
+PT. Mawar Jaya/ Roti Tawar 500gr, Susu UHT 1L, Biskuit Cokelat 150gr/ 60, 80, 40
+PT. Prima Kencana/ Air Mineral 600ml, Snack Kentang, Mayones 250gr/ 96, 72, 36
+UD. Karya Maju/ Kopi Sachet 10pcs, Gula Pasir 1kg, Susu Kental Manis 370gr/ 120, 80, 50
+PT. Indo Sukses/ Kecap Manis 620ml, Sambal Botol 335gr, Susu Cokelat 250ml/ 50, 70, 100
+CV. Prima Sejahtera/ Minyak Goreng 2L, Beras Premium 5kg, Susu UHT 1L, Kopi Aromatic 150gr/ 20, 30, 40, 50
+PT. Bumi Sentosa/ Beras Premium 5kg, Susu UHT 1L, Kopi Aromatic 150gr, Tepung Terigu 1kg, Roti Gandum/ 30, 40, 50, 60, 20
+PT. Megah Niaga/ Kopi Aromatic 150gr, Tepung Terigu 1kg, Roti Gandum, Sereal Muesli 300gr/ 50, 60, 20, 30
+CV. Sari Agung/ Tepung Terigu 1kg, Roti Gandum, Sereal Muesli 300gr, Saus Tomat 560gr, Biskuit Gandum 120gr/ 60, 20, 30, 40, 50
+UD. Makmur Bersama/ Sereal Muesli 300gr, Saus Tomat 560gr, Biskuit Gandum 120gr, Sambal Terasi 240gr/ 30, 40, 50, 60
+PT. Global Maju/ Saus Tomat 560gr, Biskuit Gandum 120gr, Sambal Terasi 240gr, Minyak Goreng 2L, Beras Premium 5kg/ 40, 50, 60, 20, 30
+PT. Lintang Logistik/ Sambal Terasi 240gr, Minyak Goreng 2L, Beras Premium 5kg, Susu UHT 1L/ 60, 20, 30, 40
+CV. Prima Sejahtera/ Minyak Goreng 2L, Beras Premium 5kg, Susu UHT 1L, Kopi Aromatic 150gr, Tepung Terigu 1kg/ 20, 30, 40, 50, 60
+UD. Cahaya Sejati/ Susu UHT 1L, Kopi Aromatic 150gr, Tepung Terigu 1kg, Roti Gandum/ 40, 50, 60, 20
+PT. Megah Niaga/ Kopi Aromatic 150gr, Tepung Terigu 1kg, Roti Gandum, Sereal Muesli 300gr, Saus Tomat 560gr/ 50, 60, 20, 30, 40
+PT. Kencana Abadi/ Roti Gandum, Sereal Muesli 300gr, Saus Tomat 560gr, Biskuit Gandum 120gr/ 20, 30, 40, 50
+UD. Makmur Bersama/ Sereal Muesli 300gr, Saus Tomat 560gr, Biskuit Gandum 120gr, Sambal Terasi 240gr, Minyak Goreng 2L/ 30, 40, 50, 60, 20
+CV. Sukses Sentosa/ Biskuit Gandum 120gr, Sambal Terasi 240gr, Minyak Goreng 2L, Beras Premium 5kg/ 50, 60, 20, 30
+PT. Lintang Logistik/ Sambal Terasi 240gr, Minyak Goreng 2L, Beras Premium 5kg, Susu UHT 1L, Kopi Aromatic 150gr/ 60, 20, 30, 40, 50
+PT. Bumi Sentosa/ Beras Premium 5kg, Susu UHT 1L, Kopi Aromatic 150gr, Tepung Terigu 1kg/ 30, 40, 50, 60
+UD. Cahaya Sejati/ Susu UHT 1L, Kopi Aromatic 150gr, Tepung Terigu 1kg, Roti Gandum, Sereal Muesli 300gr/ 40, 50, 60, 20, 30
+CV. Sari Agung/ Tepung Terigu 1kg, Roti Gandum, Sereal Muesli 300gr, Saus Tomat 560gr/ 60, 20, 30, 40
+PT. Kencana Abadi/ Roti Gandum, Sereal Muesli 300gr, Saus Tomat 560gr, Biskuit Gandum 120gr, Sambal Terasi 240gr/ 20, 30, 40, 50, 60
+PT. Global Maju/ Saus Tomat 560gr, Biskuit Gandum 120gr, Sambal Terasi 240gr, Minyak Goreng 2L/ 40, 50, 60, 20
+CV. Sukses Sentosa/ Biskuit Gandum 120gr, Sambal Terasi 240gr, Minyak Goreng 2L, Beras Premium 5kg, Susu UHT 1L/ 50, 60, 20, 30, 40
+CV. Prima Sejahtera/ Minyak Goreng 2L, Beras Premium 5kg, Susu UHT 1L, Kopi Aromatic 150gr/ 20, 30, 40, 50
+PT. Bumi Sentosa/ Beras Premium 5kg, Susu UHT 1L, Kopi Aromatic 150gr, Tepung Terigu 1kg, Roti Gandum/ 30, 40, 50, 60, 20
+PT. Megah Niaga/ Kopi Aromatic 150gr, Tepung Terigu 1kg, Roti Gandum, Sereal Muesli 300gr/ 50, 60, 20, 30
+CV. Sari Agung/ Tepung Terigu 1kg, Roti Gandum, Sereal Muesli 300gr, Saus Tomat 560gr, Biskuit Gandum 120gr/ 60, 20, 30, 40, 50
+UD. Makmur Bersama/ Sereal Muesli 300gr, Saus Tomat 560gr, Biskuit Gandum 120gr, Sambal Terasi 240gr/ 30, 40, 50, 60
+PT. Global Maju/ Saus Tomat 560gr, Biskuit Gandum 120gr, Sambal Terasi 240gr, Minyak Goreng 2L, Beras Premium 5kg/ 40, 50, 60, 20, 30
+PT. Lintang Logistik/ Sambal Terasi 240gr, Minyak Goreng 2L, Beras Premium 5kg, Susu UHT 1L/ 60, 20, 30, 40
+CV. Prima Sejahtera/ Minyak Goreng 2L, Beras Premium 5kg, Susu UHT 1L, Kopi Aromatic 150gr, Tepung Terigu 1kg/ 20, 30, 40, 50, 60
+UD. Cahaya Sejati/ Susu UHT 1L, Kopi Aromatic 150gr, Tepung Terigu 1kg, Roti Gandum/ 40, 50, 60, 20
+PT. Megah Niaga/ Kopi Aromatic 150gr, Tepung Terigu 1kg, Roti Gandum, Sereal Muesli 300gr, Saus Tomat 560gr/ 50, 60, 20, 30, 40
+PT. Kencana Abadi/ Roti Gandum, Sereal Muesli 300gr, Saus Tomat 560gr, Biskuit Gandum 120gr/ 20, 30, 40, 50
+UD. Makmur Bersama/ Sereal Muesli 300gr, Saus Tomat 560gr, Biskuit Gandum 120gr, Sambal Terasi 240gr, Minyak Goreng 2L/ 30, 40, 50, 60, 20
+CV. Sukses Sentosa/ Biskuit Gandum 120gr, Sambal Terasi 240gr, Minyak Goreng 2L, Beras Premium 5kg/ 50, 60, 20, 30
+
+================================================================
+*Harap diverifikasi sebelum dikirim ke toko.
