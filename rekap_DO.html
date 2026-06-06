@@ -267,6 +267,12 @@ function parseDate(str) {
 }
 data.sort(function(a, b) { return parseDate(a.kirim) - parseDate(b.kirim); });
 
+/* ── Load persisted stages from localStorage ── */
+try {
+  var _saved = localStorage.getItem('do_stages_v1');
+  if (_saved) JSON.parse(_saved).forEach(function(s, i) { if (data[i]) data[i].stage = s; });
+} catch(e) {}
+
 /* ── Init stats & button labels ── */
 var cnt1  = data.filter(function(d){ return d.stage === 1; }).length;
 var cnt2  = data.filter(function(d){ return d.stage === 2; }).length;

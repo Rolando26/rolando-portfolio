@@ -170,7 +170,7 @@
         <h1>Delivery Order Dashboard</h1>
         <p>Simulasi sistem Delivery Order untuk keperluan testing internal.</p>
       </div>
-      <a href="rekap_DO.html" style="display:inline-flex;align-items:center;gap:8px;padding:0.75rem 1.25rem;background:#2563eb;color:#fff;border-radius:999px;font-size:0.9rem;font-weight:600;text-decoration:none;border:none;transition:background .15s,transform .15s;" onmouseover="this.style.background='#1d4ed8';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#2563eb';this.style.transform='translateY(0)'">Lihat Rekap DO</a>
+      <a href="rekap_DO.html" style="display:inline-flex;align-items:center;gap:8px;padding:0.75rem 1.25rem;background:#2563eb;color:#fff;border-radius:999px;font-size:0.9rem;font-weight:600;text-decoration:none;border:none;transition:background .15s,transform .15s;" onmouseover="this.style.background='#1d4ed8';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#2563eb';this.style.transform='translateY(0)'">📄 Preview Rekap DO — Demo Visual</a>
     </div>
 
     <section id="listView" class="panel">
@@ -718,6 +718,7 @@
       const item = doData.find(d => d.id === id);
       if (!item || item.stage >= 3) return;
       item.stage += 1;
+      saveStages();
       showDetail(id);
     }
 
@@ -904,7 +905,7 @@
         items
       });
 
-      doData.sort((a, b) => parseIdDate(a.invoiceDate) - parseIdDate(b.invoiceDate));
+      doData.sort((a, b) => parseIdDate(a.shippingDate || a.invoiceDate) - parseIdDate(b.shippingDate || b.invoiceDate));
       document.getElementById('searchInput').value = '';
       document.getElementById('statusFilter').value = '';
       document.getElementById('expeditionFilter').value = '';
@@ -917,8 +918,18 @@
       const [d, m, y] = str.split(' ');
       return new Date(y, monthMap[m] - 1, d);
     }
-    doData.sort((a, b) => parseIdDate(a.invoiceDate) - parseIdDate(b.invoiceDate));
+    doData.sort((a, b) => parseIdDate(a.shippingDate || a.invoiceDate) - parseIdDate(b.shippingDate || b.invoiceDate));
 
+    function saveStages() {
+      try { localStorage.setItem('do_stages_v1', JSON.stringify(doData.map(d => d.stage))); } catch(e) {}
+    }
+    function loadSavedStages() {
+      try {
+        const saved = localStorage.getItem('do_stages_v1');
+        if (saved) JSON.parse(saved).forEach((s, i) => { if (doData[i]) doData[i].stage = s; });
+      } catch(e) {}
+    }
+    loadSavedStages();
     buildList(doData);
   </script>
 </body>
