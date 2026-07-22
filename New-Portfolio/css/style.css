@@ -291,12 +291,15 @@ html[data-theme="dark"] .theme-toggle-thumb { transform: translateX(20px); backg
   background: var(--card); box-shadow: var(--shadow); transition: transform .5s var(--ease);
 }
 .project:hover .browser { transform: translateY(-6px) rotate(-.4deg); }
+.browser--link { display: block; cursor: pointer; text-decoration: none; }
 .browser-bar {
   display: flex; gap: 7px; padding: 13px 16px; background: var(--paper-2); border-bottom: 1px solid var(--line);
 }
 .browser-bar span { width: 11px; height: 11px; border-radius: 50%; background: var(--line-strong); }
 .browser-bar span:first-child { background: var(--accent); }
 .browser-body { padding: 26px; aspect-ratio: 4 / 3; display: flex; flex-direction: column; gap: 14px; }
+.browser-body--screenshot { padding: 0; overflow: hidden; }
+.browser-body--screenshot img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
 
 /* Rental mockup */
 .pr-row { display: flex; justify-content: space-between; align-items: center; }
